@@ -17,8 +17,7 @@ type BsrsQuestions {
 }
 
 type OrganizationsApprovedBedsHistory {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2023-01-01 Int @map("2023-01-01")
+  year_2023_01_01 Int @map("2023-01-01")
   start Int
 }
 
@@ -368,10 +367,8 @@ type OrganizationsPreferenceExamReportBioTestItemsAntiHavLggSelect {
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsAntiHavLggSelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陰性 String @map("陰性")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陽性 String @map("陽性")
+  negative String @map("陰性")
+  positive String @map("陽性")
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsAntiHavLgmSelect {
@@ -389,10 +386,8 @@ type OrganizationsPreferenceExamReportBioTestItemsAntiHavLgmSelect {
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsAntiHavLgmSelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陰性 String @map("陰性")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陽性 String @map("陽性")
+  negative String @map("陰性")
+  positive String @map("陽性")
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsAntiHbc {
@@ -422,17 +417,13 @@ type OrganizationsPreferenceExamReportBioTestItemsAntiHbcLgm {
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsAntiHbcLgmSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陰性 String @map("陰性")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陽性 String @map("陽性")
+  negative String @map("陰性")
+  positive String @map("陽性")
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsAntiHbcSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陰性 String @map("陰性")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陽性 String @map("陽性")
+  negative String @map("陰性")
+  positive String @map("陽性")
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsAntiHbe {
@@ -449,10 +440,8 @@ type OrganizationsPreferenceExamReportBioTestItemsAntiHbe {
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsAntiHbeSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陰性 String @map("陰性")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陽性 String @map("陽性")
+  negative String @map("陰性")
+  positive String @map("陽性")
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsAntiHbs {
@@ -469,14 +458,10 @@ type OrganizationsPreferenceExamReportBioTestItemsAntiHbs {
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsAntiHbsSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 正常 String @map("正常")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 異常 String @map("異常")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陰性 String @map("陰性")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陽性 String @map("陽性")
+  normal String @map("正常")
+  abnormal String @map("異常")
+  negative String @map("陰性")
+  positive String @map("陽性")
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsAntiHcv {
@@ -493,10 +478,8 @@ type OrganizationsPreferenceExamReportBioTestItemsAntiHcv {
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsAntiHcvSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陰性 String @map("陰性")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陽性 String @map("陽性")
+  negative String @map("陰性")
+  positive String @map("陽性")
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsBilirubinNum {
@@ -609,10 +592,8 @@ type OrganizationsPreferenceExamReportBioTestItemsHbeag {
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsHbeagSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陰性 String @map("陰性")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陽性 String @map("陽性")
+  negative String @map("陰性")
+  positive String @map("陽性")
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsHbsag {
@@ -629,10 +610,8 @@ type OrganizationsPreferenceExamReportBioTestItemsHbsag {
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsHbsagSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陰性 String @map("陰性")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陽性 String @map("陽性")
+  negative String @map("陰性")
+  positive String @map("陽性")
 }
 
 type OrganizationsPreferenceExamReportBioTestItemsHdlC {
@@ -1526,10 +1505,8 @@ type OrganizationsPreferenceExamReportBloodTestItemsStsRprVdrlSelect {
 }
 
 type OrganizationsPreferenceExamReportBloodTestItemsStsRprVdrlSelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陰性 String @map("陰性")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陽性 String @map("陽性")
+  negative String @map("陰性")
+  positive String @map("陽性")
 }
 
 type OrganizationsPreferenceExamReportBloodTestItemsTotalBilirubinNum {
@@ -1573,10 +1550,8 @@ type OrganizationsPreferenceExamReportBloodTestItemsTpha {
 }
 
 type OrganizationsPreferenceExamReportBloodTestItemsTphaSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陰性 String @map("陰性")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 陽性 String @map("陽性")
+  negative String @map("陰性")
+  positive String @map("陽性")
 }
 
 type OrganizationsPreferenceExamReportBloodTestItemsTroponin {
@@ -1750,10 +1725,8 @@ type OrganizationsPreferenceExamReportOtherTestItemsSputumCultureSelect {
 }
 
 type OrganizationsPreferenceExamReportOtherTestItemsSputumCultureSelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
+  plus String @map("+")
+  minus String @map("-")
 }
 
 type OrganizationsPreferenceExamReportOtherTestItemsUrineCultureSelect {
@@ -1774,10 +1747,8 @@ type OrganizationsPreferenceExamReportOtherTestItemsUrineCultureSelect {
 }
 
 type OrganizationsPreferenceExamReportOtherTestItemsUrineCultureSelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
+  plus String @map("+")
+  minus String @map("-")
 }
 
 type OrganizationsPreferenceExamReportOtherTestItemsWoundCultureNum {
@@ -1829,10 +1800,8 @@ type OrganizationsPreferenceExamReportStoolTestItemsAmoeba {
 }
 
 type OrganizationsPreferenceExamReportStoolTestItemsAmoebaSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
+  plus String @map("+")
+  minus String @map("-")
 }
 
 type OrganizationsPreferenceExamReportStoolTestItemsBacillaryDysenterySelect {
@@ -1853,10 +1822,8 @@ type OrganizationsPreferenceExamReportStoolTestItemsBacillaryDysenterySelect {
 }
 
 type OrganizationsPreferenceExamReportStoolTestItemsBacillaryDysenterySelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
+  plus String @map("+")
+  minus String @map("-")
 }
 
 type OrganizationsPreferenceExamReportStoolTestItemsSalmonellaCultureSelect {
@@ -1876,10 +1843,8 @@ type OrganizationsPreferenceExamReportStoolTestItemsSalmonellaCultureSelect {
 }
 
 type OrganizationsPreferenceExamReportStoolTestItemsSalmonellaCultureSelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
+  plus String @map("+")
+  minus String @map("-")
 }
 
 type OrganizationsPreferenceExamReportStoolTestItemsStoolOccultBlood {
@@ -1897,16 +1862,11 @@ type OrganizationsPreferenceExamReportStoolTestItemsStoolOccultBlood {
 }
 
 type OrganizationsPreferenceExamReportStoolTestItemsStoolOccultBloodSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2+ String @map("2+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 3+ String @map("3+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 4+ String @map("4+")
+  plus String @map("+")
+  minus String @map("-")
+  level2plus String @map("2+")
+  level3plus String @map("3+")
+  level4plus String @map("4+")
 }
 
 type OrganizationsPreferenceExamReportStoolTestItemsStoolParasite {
@@ -1927,10 +1887,8 @@ type OrganizationsPreferenceExamReportStoolTestItemsStoolParasite {
 }
 
 type OrganizationsPreferenceExamReportStoolTestItemsStoolParasiteSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
+  plus String @map("+")
+  minus String @map("-")
 }
 
 type OrganizationsPreferenceExamReportUrineTest {
@@ -1992,8 +1950,6 @@ type OrganizationsPreferenceExamReportUrineTestItemsAppearanceSelection {
   Cloudy String? @map(" Cloudy")
   Turbid String? @map(" Turbid")
   Clear  String
-  Cloudy String?
-  Turbid String?
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsBacteria {
@@ -2011,16 +1967,11 @@ type OrganizationsPreferenceExamReportUrineTestItemsBacteria {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsBacteriaSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2+ String @map("2+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 3+ String @map("3+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 4+ String @map("4+")
+  plus String @map("+")
+  minus String @map("-")
+  level2plus String @map("2+")
+  level3plus String @map("3+")
+  level4plus String @map("4+")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsBilirubin {
@@ -2039,14 +1990,10 @@ type OrganizationsPreferenceExamReportUrineTestItemsBilirubin {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsBilirubinSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 1+ String @map("1+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2+ String @map("2+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 3+ String @map("3+")
+  minus String @map("-")
+  level1plus String @map("1+")
+  level2plus String @map("2+")
+  level3plus String @map("3+")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsBioPh {
@@ -2079,16 +2026,11 @@ type OrganizationsPreferenceExamReportUrineTestItemsColor {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsColorSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 橘色 String @map("橘色")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 紅色 String @map("紅色")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 褐色 String @map("褐色")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 黃色 String @map("黃色")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 黑色 String @map("黑色")
+  orange String @map("橘色")
+  red String @map("紅色")
+  brown String @map("褐色")
+  yellow String @map("黃色")
+  black String @map("黑色")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsCrystal {
@@ -2122,17 +2064,13 @@ type OrganizationsPreferenceExamReportUrineTestItemsCrystalSelect {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsCrystalSelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
+  plus String @map("+")
+  minus String @map("-")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsCrystalSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
+  plus String @map("+")
+  minus String @map("-")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsCylinder {
@@ -2150,10 +2088,8 @@ type OrganizationsPreferenceExamReportUrineTestItemsCylinder {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsCylinderSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
+  plus String @map("+")
+  minus String @map("-")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsEpithelium {
@@ -2184,18 +2120,12 @@ type OrganizationsPreferenceExamReportUrineTestItemsGlucose {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsGlucoseSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // +/- String @map("+/-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 1+ String @map("1+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2+ String @map("2+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 3+ String @map("3+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 4+ String @map("4+")
+  plus_minus String @map("+/-")
+  minus String @map("-")
+  level1plus String @map("1+")
+  level2plus String @map("2+")
+  level3plus String @map("3+")
+  level4plus String @map("4+")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsKetoneBodyNum {
@@ -2232,12 +2162,9 @@ type OrganizationsPreferenceExamReportUrineTestItemsKetoneBodySelect {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsKetoneBodySelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // +/- String? @map("+/-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
+  plus String @map("+")
+  plus_minus String? @map("+/-")
+  minus String @map("-")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsLeukocyteEsteraseNum {
@@ -2271,16 +2198,11 @@ type OrganizationsPreferenceExamReportUrineTestItemsLeukocyteEsteraseSelect {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsLeukocyteEsteraseSelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2+ String @map("2+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 3+ String @map("3+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 4+ String @map("4+")
+  plus String @map("+")
+  minus String @map("-")
+  level2plus String @map("2+")
+  level3plus String @map("3+")
+  level4plus String @map("4+")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsNitriteNum {
@@ -2314,18 +2236,12 @@ type OrganizationsPreferenceExamReportUrineTestItemsNitriteSelect {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsNitriteSelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // +/- String? @map("+/-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2+ String @map("2+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 3+ String @map("3+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 4+ String @map("4+")
+  plus String @map("+")
+  plus_minus String? @map("+/-")
+  minus String @map("-")
+  level2plus String @map("2+")
+  level3plus String @map("3+")
+  level4plus String @map("4+")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsOccultBlood {
@@ -2343,24 +2259,15 @@ type OrganizationsPreferenceExamReportUrineTestItemsOccultBlood {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsOccultBloodSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String? @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // +/- String? @map("+/-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String? @map("-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2+ String @map("2+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 3+ String @map("3+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 4+ String @map("4+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 有 String? @map("有")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 無 String? @map("無")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // ＋/- String? @map("＋/-")
+  plus String? @map("+")
+  plus_minus String? @map("+/-")
+  minus String? @map("-")
+  level2plus String @map("2+")
+  level3plus String @map("3+")
+  level4plus String @map("4+")
+  yes String? @map("有")
+  no String? @map("無")
+  plus_minus_full String? @map("＋/-")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsProtein {
@@ -2392,18 +2299,12 @@ type OrganizationsPreferenceExamReportUrineTestItemsProteinSelect {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsProteinSelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // +/- String @map("+/-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 1+ String @map("1+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2+ String @map("2+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 3+ String @map("3+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 4+ String @map("4+")
+  plus_minus String @map("+/-")
+  minus String @map("-")
+  level1plus String @map("1+")
+  level2plus String @map("2+")
+  level3plus String @map("3+")
+  level4plus String @map("4+")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsPusCell {
@@ -2457,10 +2358,8 @@ type OrganizationsPreferenceExamReportUrineTestItemsUrineRbcNum {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsUrineRbcNumSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
+  plus String @map("+")
+  minus String @map("-")
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsUrineRbcRange {
@@ -2489,16 +2388,11 @@ type OrganizationsPreferenceExamReportUrineTestItemsUrineRbcSelect {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsUrineRbcSelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String? @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String? @map("-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2+ String? @map("2+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 3+ String? @map("3+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 4+ String? @map("4+")
+  plus String? @map("+")
+  minus String? @map("-")
+  level2plus String? @map("2+")
+  level3plus String? @map("3+")
+  level4plus String? @map("4+")
   Numerous String?
 }
 
@@ -2552,16 +2446,11 @@ type OrganizationsPreferenceExamReportUrineTestItemsUrineWbcSelect {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsUrineWbcSelectSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String? @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String? @map("-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2+ String? @map("2+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 3+ String? @map("3+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 4+ String? @map("4+")
+  plus String? @map("+")
+  minus String? @map("-")
+  level2plus String? @map("2+")
+  level3plus String? @map("3+")
+  level4plus String? @map("4+")
   Numerous String?
 }
 
@@ -2591,16 +2480,11 @@ type OrganizationsPreferenceExamReportUrineTestItemsUrobilinogenNum {
 }
 
 type OrganizationsPreferenceExamReportUrineTestItemsUrobilinogenSelection {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // + String? @map("+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // - String @map("-")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 1+ String? @map("1+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2+ String? @map("2+")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 3+ String? @map("3+")
+  plus String? @map("+")
+  minus String @map("-")
+  level1plus String? @map("1+")
+  level2plus String? @map("2+")
+  level3plus String? @map("3+")
 }
 
 type OrganizationsPreferenceHealthDashboardGroups {
@@ -3290,12 +3174,9 @@ type OrganizationsPrintSettingSalarySlip {
 }
 
 type OrganizationsPrintSettingSignature {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 0 OrganizationsPrintSettingSignature0 @map("0")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 1 OrganizationsPrintSettingSignature1 @map("1")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  // 2 OrganizationsPrintSettingSignature2 @map("2")
+  field0 OrganizationsPrintSettingSignature0 @map("0")
+  field1 OrganizationsPrintSettingSignature1 @map("1")
+  field2 OrganizationsPrintSettingSignature2 @map("2")
 }
 
 type OrganizationsPrintSettingSignature0 {
