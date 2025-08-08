@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,12 +7,3611 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  email     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+type BsrsQuestions {
+  Q1 Int
+  Q2 Int
+  Q3 Int
+  Q4 Int
+  Q5 Int
+  Q6 Int
+}
 
-  @@map("users")
+type OrganizationsApprovedBedsHistory {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2023-01-01 Int @map("2023-01-01")
+  start Int
+}
+
+type OrganizationsBloodSugarSetting {
+  devices    String[]
+  parts      String[]
+  showDevice Boolean
+  showPart   Boolean
+}
+
+type OrganizationsDepartmentSource {
+  apikey String
+  url    String
+}
+
+type OrganizationsDoltcCredentials {
+  agency    String
+  enable    Boolean
+  secretKey String
+  serverUrl String?
+}
+
+type OrganizationsEvaluateFormSetting {
+  depression String[]
+}
+
+type OrganizationsImportSource {
+  id    String @map("_id") @db.ObjectId
+  name  String
+  photo String
+}
+
+type OrganizationsNhcCredentials {
+  agency    String?
+  enable    Boolean?
+  secretKey String?
+  serverUrl String?
+}
+
+type OrganizationsPreference {
+  BMI_severe                 OrganizationsPreferenceBmiSevere
+  RegularFreqSetting         OrganizationsPreferenceRegularFreqSetting
+  SIinEN                     Boolean?
+  aiModel                    OrganizationsPreferenceAiModel
+  airborneIcon               String?
+  airborneLabel              String?
+  airborneUrl                String?
+  assessmentStart            Int
+  bedsoreBBoxEdit            Boolean?
+  bloodCirculationSetting    OrganizationsPreferenceBloodCirculationSetting
+  bloodsugar_severe          OrganizationsPreferenceBloodsugarSevere
+  careGiverShifts            OrganizationsPreferenceCareGiverShifts[]
+  dailyCareNoteReviewSetting OrganizationsPreferenceDailyCareNoteReviewSetting?
+  evaluateFormSetting        OrganizationsPreferenceEvaluateFormSetting?
+  eventAnalysisSetting       OrganizationsPreferenceEventAnalysisSetting
+  examReport                 OrganizationsPreferenceExamReport
+  feverTime                  String?
+  healthDashboardGroups      OrganizationsPreferenceHealthDashboardGroups[]
+  hideChangelog              Boolean?
+  lineAbnormal               Boolean?
+  lineAlertModule            String[]
+  lineTransferManage         Boolean?
+  mars                       OrganizationsPreferenceMars
+  medicalRecordShiftSort     OrganizationsPreferenceMedicalRecordShiftSort?
+  nutritionMeal              OrganizationsPreferenceNutritionMeal?
+  physiologicalSetting       OrganizationsPreferencePhysiologicalSetting
+  printPatientInfo           OrganizationsPreferencePrintPatientInfo?
+  prints                     OrganizationsPreferencePrints
+  qualityIndicator           OrganizationsPreferenceQualityIndicator
+  shifts                     OrganizationsPreferenceShifts[]
+  showMood                   Boolean?
+  summaryFormSetting         OrganizationsPreferenceSummaryFormSetting?
+  units                      OrganizationsPreferenceUnits
+  vitalsignAlertRule         String
+  vitalsign_alert            OrganizationsPreferenceVitalsignAlert?
+  vitalsign_mild             OrganizationsPreferenceVitalsignMild
+  vitalsign_severe           OrganizationsPreferenceVitalsignSevere
+  zone                       String
+}
+
+type OrganizationsPreferenceAiModel {
+  bedsores       Int
+  commBookOrgMsg Int?
+  nursingNotes   Int?
+  vitalsigns     Int
+}
+
+type OrganizationsPreferenceBloodCirculationSetting {
+  formType    String?
+  freq        String
+  freqSetting String[]
+  /// Multiple data types found: String: 86.2%, Int: 13.8% out of 530 sampled entries
+  releaseTime Json
+  timeText    String[]
+}
+
+type OrganizationsPreferenceBloodsugarSevere {
+  AC   OrganizationsPreferenceBloodsugarSevereAc
+  PC   OrganizationsPreferenceBloodsugarSeverePc
+  STAT OrganizationsPreferenceBloodsugarSevereStat?
+}
+
+type OrganizationsPreferenceBloodsugarSevereAc {
+  /// Multiple data types found: String: 16.6%, Int: 83.4% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 89.6%, Int: 10.4% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceBloodsugarSeverePc {
+  /// Multiple data types found: String: 4%, Int: 96% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 89.2%, Int: 10.8% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceBloodsugarSevereStat {
+  /// Multiple data types found: String: 0.4%, Int: 99.6% out of 509 sampled entries
+  maxValue     Json
+  maxValueSign String
+  minValue     String
+  minValueSign String
+}
+
+type OrganizationsPreferenceBmiSevere {
+  BMI OrganizationsPreferenceBmiSevereBmi
+}
+
+type OrganizationsPreferenceBmiSevereBmi {
+  /// Multiple data types found: String: 12.3%, Int: 87.7% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 12.3%, Float: 87.7% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceCareGiverShifts {
+  timeEnd   String
+  timeStart String
+  value     String
+}
+
+type OrganizationsPreferenceDailyCareNoteReviewSetting {
+  enable       String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  lasstingHour Json?
+  /// Multiple data types found: String: 3.2%, Int: 96.8% out of 62 sampled entries
+  lastingHour  Json
+}
+
+type OrganizationsPreferenceEvaluateFormSetting {
+  depression String[]
+}
+
+type OrganizationsPreferenceEventAnalysisSetting {
+  HintDays_bedsore             String
+  HintDays_fallevent           String
+  HintDays_infection           String
+  /// Multiple data types found: String: 52.6%, Int: 47.4% out of 530 sampled entries
+  HintDays_pain                Json
+  HintDays_restraint           String
+  HintDays_transfermanage      String
+  /// Multiple data types found: String: 52.6%, Int: 47.4% out of 530 sampled entries
+  HintDays_tube                Json
+  /// Multiple data types found: String: 0.2%, Int: 99.8% out of 530 sampled entries
+  HintDays_unusualEvent        Json
+  HintDays_weightrecord        String
+  /// Multiple data types found: String: 0.2%, Int: 99.8% out of 530 sampled entries
+  TrackHintDays_bedsore        Json
+  /// Multiple data types found: String: 0.2%, Int: 99.8% out of 530 sampled entries
+  TrackHintDays_fallevent      Json
+  TrackHintDays_infection      Int
+  /// Multiple data types found: String: 0.2%, Int: 99.8% out of 530 sampled entries
+  TrackHintDays_pain           Json
+  TrackHintDays_restraint      Int
+  TrackHintDays_transfermanage Int
+  TrackHintDays_tube           Int
+  TrackHintDays_unusualEvent   Int
+  TrackHintDays_weightrecord   Int
+  /// Multiple data types found: String: 0.6%, Int: 99.4% out of 530 sampled entries
+  TrackNum_bedsore             Json
+  /// Multiple data types found: String: 12.5%, Int: 87.5% out of 530 sampled entries
+  TrackNum_fallevent           Json
+  /// Multiple data types found: String: 0.9%, Int: 99.1% out of 530 sampled entries
+  TrackNum_infection           Json
+  /// Multiple data types found: String: 11.3%, Int: 88.7% out of 530 sampled entries
+  TrackNum_pain                Json
+  /// Multiple data types found: String: 0.2%, Int: 99.8% out of 530 sampled entries
+  TrackNum_restraint           Json
+  /// Multiple data types found: String: 0.4%, Int: 99.6% out of 530 sampled entries
+  TrackNum_transfermanage      Json
+  /// Multiple data types found: String: 0.6%, Int: 99.4% out of 530 sampled entries
+  TrackNum_tube                Json
+  /// Multiple data types found: String: 0.8%, Int: 99.2% out of 530 sampled entries
+  TrackNum_unusualEvent        Json
+  /// Multiple data types found: String: 0.6%, Int: 99.4% out of 530 sampled entries
+  TrackNum_weightrecord        Json
+  TrackUnit_bedsore            String
+  TrackUnit_fallevent          String
+  TrackUnit_infection          String
+  TrackUnit_pain               String
+  TrackUnit_restraint          String
+  TrackUnit_transfermanage     String
+  TrackUnit_tube               String
+  TrackUnit_unusualEvent       String
+  TrackUnit_weightrecord       String
+  needSetting_bedsore          String
+  needSetting_fallevent        String
+  needSetting_infection        String
+  needSetting_pain             String
+  needSetting_restraint        String
+  needSetting_transfermanage   String
+  needSetting_tube             String
+  needSetting_unusualEvent     String
+  needSetting_weightrecord     String
+}
+
+type OrganizationsPreferenceExamReport {
+  bioTest   OrganizationsPreferenceExamReportBioTest
+  bloodTest OrganizationsPreferenceExamReportBloodTest
+  examDate  OrganizationsPreferenceExamReportExamDate
+  otherTest OrganizationsPreferenceExamReportOtherTest
+  stoolTest OrganizationsPreferenceExamReportStoolTest
+  urineTest OrganizationsPreferenceExamReportUrineTest
+}
+
+type OrganizationsPreferenceExamReportBioTest {
+  en_label String
+  items    OrganizationsPreferenceExamReportBioTestItems
+  label    String
+  name     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItems {
+  AGRatio             OrganizationsPreferenceExamReportBioTestItemsAgRatio?
+  ALKP_num            OrganizationsPreferenceExamReportBioTestItemsAlkpNum?
+  CholRat_num         OrganizationsPreferenceExamReportBioTestItemsCholRatNum?
+  Ferritin_num        OrganizationsPreferenceExamReportBioTestItemsFerritinNum?
+  IronB_num           OrganizationsPreferenceExamReportBioTestItemsIronBNum?
+  NTproBNP_num        OrganizationsPreferenceExamReportBioTestItemsNTproBnpNum?
+  PCT_num             OrganizationsPreferenceExamReportBioTestItemsPctNum?
+  TIBC_num            OrganizationsPreferenceExamReportBioTestItemsTibcNum?
+  UCR_num             OrganizationsPreferenceExamReportBioTestItemsUcrNum?
+  acs                 OrganizationsPreferenceExamReportBioTestItemsAcs?
+  albumin_num         OrganizationsPreferenceExamReportBioTestItemsAlbuminNum
+  anti_hav_lgg_select OrganizationsPreferenceExamReportBioTestItemsAntiHavLggSelect?
+  anti_hav_lgm_select OrganizationsPreferenceExamReportBioTestItemsAntiHavLgmSelect?
+  anti_hbc            OrganizationsPreferenceExamReportBioTestItemsAntiHbc?
+  anti_hbc_lgm        OrganizationsPreferenceExamReportBioTestItemsAntiHbcLgm?
+  anti_hbe            OrganizationsPreferenceExamReportBioTestItemsAntiHbe?
+  anti_hbs            OrganizationsPreferenceExamReportBioTestItemsAntiHbs?
+  anti_hcv            OrganizationsPreferenceExamReportBioTestItemsAntiHcv?
+  bilirubin_num       OrganizationsPreferenceExamReportBioTestItemsBilirubinNum?
+  bun                 OrganizationsPreferenceExamReportBioTestItemsBun
+  calcium             OrganizationsPreferenceExamReportBioTestItemsCalcium
+  chloride            OrganizationsPreferenceExamReportBioTestItemsChloride
+  creatinine          OrganizationsPreferenceExamReportBioTestItemsCreatinine
+  hba1c               OrganizationsPreferenceExamReportBioTestItemsHba1C
+  hbeag               OrganizationsPreferenceExamReportBioTestItemsHbeag?
+  hbsag               OrganizationsPreferenceExamReportBioTestItemsHbsag?
+  hdl_c               OrganizationsPreferenceExamReportBioTestItemsHdlC
+  hscrp_num           OrganizationsPreferenceExamReportBioTestItemsHscrpNum?
+  kalium              OrganizationsPreferenceExamReportBioTestItemsKalium
+  ldh                 OrganizationsPreferenceExamReportBioTestItemsLdh?
+  ldl_c               OrganizationsPreferenceExamReportBioTestItemsLdlC
+  mg                  OrganizationsPreferenceExamReportBioTestItemsMg
+  pcs                 OrganizationsPreferenceExamReportBioTestItemsPcs?
+  risk_factor         OrganizationsPreferenceExamReportBioTestItemsRiskFactor?
+  scc                 OrganizationsPreferenceExamReportBioTestItemsScc?
+  serumFerri          OrganizationsPreferenceExamReportBioTestItemsSerumFerri?
+  serumPhosphorus     OrganizationsPreferenceExamReportBioTestItemsSerumPhosphorus
+  sgot                OrganizationsPreferenceExamReportBioTestItemsSgot
+  sgpt                OrganizationsPreferenceExamReportBioTestItemsSgpt
+  sodium              OrganizationsPreferenceExamReportBioTestItemsSodium
+  totalCholesterol    OrganizationsPreferenceExamReportBioTestItemsTotalCholesterol
+  tp                  OrganizationsPreferenceExamReportBioTestItemsTp
+  triglyceride        OrganizationsPreferenceExamReportBioTestItemsTriglyceride
+  tsh_num             OrganizationsPreferenceExamReportBioTestItemsTshNum?
+  uricAcid            OrganizationsPreferenceExamReportBioTestItemsUricAcid
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAcs {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAgRatio {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAlbuminNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAlkpNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHavLggSelect {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min       Json?
+  ps        String
+  selection OrganizationsPreferenceExamReportBioTestItemsAntiHavLggSelectSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHavLggSelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陰性 String @map("陰性")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陽性 String @map("陽性")
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHavLgmSelect {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min       Json?
+  ps        String
+  selection OrganizationsPreferenceExamReportBioTestItemsAntiHavLgmSelectSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHavLgmSelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陰性 String @map("陰性")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陽性 String @map("陽性")
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHbc {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String
+  selection OrganizationsPreferenceExamReportBioTestItemsAntiHbcSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHbcLgm {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String
+  selection OrganizationsPreferenceExamReportBioTestItemsAntiHbcLgmSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHbcLgmSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陰性 String @map("陰性")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陽性 String @map("陽性")
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHbcSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陰性 String @map("陰性")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陽性 String @map("陽性")
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHbe {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String
+  selection OrganizationsPreferenceExamReportBioTestItemsAntiHbeSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHbeSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陰性 String @map("陰性")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陽性 String @map("陽性")
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHbs {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String
+  selection OrganizationsPreferenceExamReportBioTestItemsAntiHbsSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHbsSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 正常 String @map("正常")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 異常 String @map("異常")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陰性 String @map("陰性")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陽性 String @map("陽性")
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHcv {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String
+  selection OrganizationsPreferenceExamReportBioTestItemsAntiHcvSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsAntiHcvSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陰性 String @map("陰性")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陽性 String @map("陽性")
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsBilirubinNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsBun {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsCalcium {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsChloride {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsCholRatNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsCreatinine {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsFerritinNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsHba1C {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsHbeag {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String
+  selection OrganizationsPreferenceExamReportBioTestItemsHbeagSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsHbeagSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陰性 String @map("陰性")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陽性 String @map("陽性")
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsHbsag {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String
+  selection OrganizationsPreferenceExamReportBioTestItemsHbsagSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsHbsagSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陰性 String @map("陰性")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陽性 String @map("陽性")
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsHdlC {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsHscrpNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsIronBNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsKalium {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsLdh {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsLdlC {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsMg {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsNTproBnpNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsPcs {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsPctNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsRiskFactor {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  ps       String
+  tag      String
+  type     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit     Json?
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsScc {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsSerumFerri {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsSerumPhosphorus {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsSgot {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsSgpt {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsSodium {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsTibcNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsTotalCholesterol {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsTp {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsTriglyceride {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsTshNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsUcrNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBioTestItemsUricAcid {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTest {
+  en_label String
+  items    OrganizationsPreferenceExamReportBloodTestItems
+  label    String
+  name     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItems {
+  APTT                 OrganizationsPreferenceExamReportBloodTestItemsAptt?
+  Alk_P_num            OrganizationsPreferenceExamReportBloodTestItemsAlkPNum?            @map("Alk-P_num")
+  BE_B                 OrganizationsPreferenceExamReportBloodTestItemsBeB?
+  Band_num             OrganizationsPreferenceExamReportBloodTestItemsBandNum?
+  Direct_Bilirubin_num OrganizationsPreferenceExamReportBloodTestItemsDirectBilirubinNum? @map("Direct Bilirubin_num")
+  INR_num              OrganizationsPreferenceExamReportBloodTestItemsInrNum?
+  LymC_num             OrganizationsPreferenceExamReportBloodTestItemsLymCNum?
+  MLR_num              OrganizationsPreferenceExamReportBloodTestItemsMlrNum?
+  NLR_num              OrganizationsPreferenceExamReportBloodTestItemsNlrNum?
+  RDW_num              OrganizationsPreferenceExamReportBloodTestItemsRdwNum?
+  SegNC_num            OrganizationsPreferenceExamReportBloodTestItemsSegNcNum?
+  Segment_num          OrganizationsPreferenceExamReportBloodTestItemsSegmentNum?
+  Total_Bilirubin_num  OrganizationsPreferenceExamReportBloodTestItemsTotalBilirubinNum?  @map("Total Bilirubin_num")
+  basophils            OrganizationsPreferenceExamReportBloodTestItemsBasophils
+  bleedingTime         OrganizationsPreferenceExamReportBloodTestItemsBleedingTime?
+  blood                OrganizationsPreferenceExamReportBloodTestItemsBlood?
+  coagulationTime      OrganizationsPreferenceExamReportBloodTestItemsCoagulationTime?
+  egfr                 OrganizationsPreferenceExamReportBloodTestItemsEgfr?
+  eosinophils          OrganizationsPreferenceExamReportBloodTestItemsEosinophils
+  esr                  OrganizationsPreferenceExamReportBloodTestItemsEsr?
+  fattyAcid            OrganizationsPreferenceExamReportBloodTestItemsFattyAcid?
+  fibrinogen           OrganizationsPreferenceExamReportBloodTestItemsFibrinogen?
+  globulin             OrganizationsPreferenceExamReportBloodTestItemsGlobulin?
+  hb                   OrganizationsPreferenceExamReportBloodTestItemsHb
+  hco3_num             OrganizationsPreferenceExamReportBloodTestItemsHco3Num?
+  hs_CRP               OrganizationsPreferenceExamReportBloodTestItemsHsCrp?
+  ht                   OrganizationsPreferenceExamReportBloodTestItemsHt
+  icterus              OrganizationsPreferenceExamReportBloodTestItemsIcterus?
+  lymphocytes          OrganizationsPreferenceExamReportBloodTestItemsLymphocytes
+  mch                  OrganizationsPreferenceExamReportBloodTestItemsMch
+  mchc                 OrganizationsPreferenceExamReportBloodTestItemsMchc
+  mcv                  OrganizationsPreferenceExamReportBloodTestItemsMcv
+  monocytes            OrganizationsPreferenceExamReportBloodTestItemsMonocytes
+  neutrophils          OrganizationsPreferenceExamReportBloodTestItemsNeutrophils?
+  o2_sat_num           OrganizationsPreferenceExamReportBloodTestItemsO2SatNum?
+  pco2                 OrganizationsPreferenceExamReportBloodTestItemsPco2?
+  platelets            OrganizationsPreferenceExamReportBloodTestItemsPlatelets
+  po2                  OrganizationsPreferenceExamReportBloodTestItemsPo2?
+  prothrombinTime      OrganizationsPreferenceExamReportBloodTestItemsProthrombinTime
+  pyruricAcid          OrganizationsPreferenceExamReportBloodTestItemsPyruricAcid?
+  r_GT_num             OrganizationsPreferenceExamReportBloodTestItemsRGtNum?             @map("r-GT_num")
+  rbc                  OrganizationsPreferenceExamReportBloodTestItemsRbc
+  reticulocytesCount   OrganizationsPreferenceExamReportBloodTestItemsReticulocytesCount?
+  sts_rpr_vdrl_select  OrganizationsPreferenceExamReportBloodTestItemsStsRprVdrlSelect?
+  total_co2            OrganizationsPreferenceExamReportBloodTestItemsTotalCo2?
+  tpha                 OrganizationsPreferenceExamReportBloodTestItemsTpha?
+  troponin             OrganizationsPreferenceExamReportBloodTestItemsTroponin?
+  vdrl_rpr             OrganizationsPreferenceExamReportBloodTestItemsVdrlRpr?
+  wbc                  OrganizationsPreferenceExamReportBloodTestItemsWbc
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsAlkPNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsAptt {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String?
+  min      String?
+  ps       String?
+  tag      String
+  type     String
+  unit     String?
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsBandNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsBasophils {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsBeB {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsBleedingTime {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsBlood {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit     Json?
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsCoagulationTime {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsDirectBilirubinNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsEgfr {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsEosinophils {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsEsr {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsFattyAcid {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsFibrinogen {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsGlobulin {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsHb {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsHco3Num {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsHsCrp {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit     Json?
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsHt {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsIcterus {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsInrNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsLymCNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsLymphocytes {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsMch {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsMchc {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsMcv {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsMlrNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsMonocytes {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsNeutrophils {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsNlrNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsO2SatNum {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsPco2 {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsPlatelets {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsPo2 {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsProthrombinTime {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsPyruricAcid {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsRGtNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsRbc {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsRdwNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsReticulocytesCount {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsSegNcNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsSegmentNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsStsRprVdrlSelect {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String
+  selection OrganizationsPreferenceExamReportBloodTestItemsStsRprVdrlSelectSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsStsRprVdrlSelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陰性 String @map("陰性")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陽性 String @map("陽性")
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsTotalBilirubinNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsTotalCo2 {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsTpha {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String
+  selection OrganizationsPreferenceExamReportBloodTestItemsTphaSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsTphaSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陰性 String @map("陰性")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 陽性 String @map("陽性")
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsTroponin {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsVdrlRpr {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit     Json?
+}
+
+type OrganizationsPreferenceExamReportBloodTestItemsWbc {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportExamDate {
+  en_label String
+  label    String
+  name     String
+}
+
+type OrganizationsPreferenceExamReportOtherTest {
+  en_label String
+  items    OrganizationsPreferenceExamReportOtherTestItems
+  label    String
+  name     String
+}
+
+type OrganizationsPreferenceExamReportOtherTestItems {
+  bmd                   OrganizationsPreferenceExamReportOtherTestItemsBmd?
+  cxr_select            OrganizationsPreferenceExamReportOtherTestItemsCxrSelect?
+  hospital              OrganizationsPreferenceExamReportOtherTestItemsHospital?
+  hscrp_num             OrganizationsPreferenceExamReportOtherTestItemsHscrpNum?
+  others1               OrganizationsPreferenceExamReportOtherTestItemsOthers1
+  others2               OrganizationsPreferenceExamReportOtherTestItemsOthers2?
+  others3               OrganizationsPreferenceExamReportOtherTestItemsOthers3?
+  others4               OrganizationsPreferenceExamReportOtherTestItemsOthers4?
+  sputum_culture_select OrganizationsPreferenceExamReportOtherTestItemsSputumCultureSelect? @map("sputum culture_select")
+  urine_culture_select  OrganizationsPreferenceExamReportOtherTestItemsUrineCultureSelect?
+  wound_culture_num     OrganizationsPreferenceExamReportOtherTestItemsWoundCultureNum?
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsBmd {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsCxrSelect {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit     Json?
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsHospital {
+  danger   String
+  en_label String
+  label    String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsHscrpNum {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsOthers1 {
+  danger   String
+  en_label String
+  label    String
+  tag      String
+  type     String
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsOthers2 {
+  danger   String
+  en_label String
+  label    String
+  tag      String
+  type     String
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsOthers3 {
+  danger   String
+  en_label String
+  label    String
+  tag      String
+  type     String
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsOthers4 {
+  danger   String
+  en_label String
+  label    String
+  tag      String
+  type     String
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsSputumCultureSelect {
+  danger    Boolean
+  en_label  String
+  label     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps        Json?
+  selection OrganizationsPreferenceExamReportOtherTestItemsSputumCultureSelectSelection
+  tag       String
+  type      String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit      Json?
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsSputumCultureSelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsUrineCultureSelect {
+  danger    Boolean
+  en_label  String
+  label     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps        Json?
+  selection OrganizationsPreferenceExamReportOtherTestItemsUrineCultureSelectSelection
+  tag       String
+  type      String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit      Json?
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsUrineCultureSelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+}
+
+type OrganizationsPreferenceExamReportOtherTestItemsWoundCultureNum {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit     Json?
+}
+
+type OrganizationsPreferenceExamReportStoolTest {
+  en_label String
+  items    OrganizationsPreferenceExamReportStoolTestItems
+  label    String
+  name     String
+}
+
+type OrganizationsPreferenceExamReportStoolTestItems {
+  amoeba                     OrganizationsPreferenceExamReportStoolTestItemsAmoeba
+  bacillary_dysentery_select OrganizationsPreferenceExamReportStoolTestItemsBacillaryDysenterySelect
+  salmonella_culture_select  OrganizationsPreferenceExamReportStoolTestItemsSalmonellaCultureSelect?
+  stoolOccultBlood           OrganizationsPreferenceExamReportStoolTestItemsStoolOccultBlood
+  stoolParasite              OrganizationsPreferenceExamReportStoolTestItemsStoolParasite
+}
+
+type OrganizationsPreferenceExamReportStoolTestItemsAmoeba {
+  danger        Boolean?
+  dangerOptions String[]
+  en_label      String?
+  label         String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max           Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min           Json?
+  ps            String?
+  selection     OrganizationsPreferenceExamReportStoolTestItemsAmoebaSelection?
+  tag           String?
+  type          String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit          Json?
+}
+
+type OrganizationsPreferenceExamReportStoolTestItemsAmoebaSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+}
+
+type OrganizationsPreferenceExamReportStoolTestItemsBacillaryDysenterySelect {
+  danger        Boolean?
+  dangerOptions String[]
+  en_label      String?
+  label         String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max           Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min           Json?
+  ps            String?
+  selection     OrganizationsPreferenceExamReportStoolTestItemsBacillaryDysenterySelectSelection?
+  tag           String?
+  type          String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit          Json?
+}
+
+type OrganizationsPreferenceExamReportStoolTestItemsBacillaryDysenterySelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+}
+
+type OrganizationsPreferenceExamReportStoolTestItemsSalmonellaCultureSelect {
+  danger    Boolean
+  en_label  String
+  label     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min       Json?
+  ps        String
+  selection OrganizationsPreferenceExamReportStoolTestItemsSalmonellaCultureSelectSelection
+  tag       String
+  type      String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit      Json?
+}
+
+type OrganizationsPreferenceExamReportStoolTestItemsSalmonellaCultureSelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+}
+
+type OrganizationsPreferenceExamReportStoolTestItemsStoolOccultBlood {
+  danger        Boolean?
+  dangerOptions String[]
+  en_label      String?
+  label         String?
+  max           String?
+  min           String?
+  ps            String?
+  selection     OrganizationsPreferenceExamReportStoolTestItemsStoolOccultBloodSelection?
+  tag           String?
+  type          String?
+  unit          String?
+}
+
+type OrganizationsPreferenceExamReportStoolTestItemsStoolOccultBloodSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2+ String @map("2+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 3+ String @map("3+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 4+ String @map("4+")
+}
+
+type OrganizationsPreferenceExamReportStoolTestItemsStoolParasite {
+  danger        Boolean?
+  dangerOptions String[]
+  en_label      String?
+  label         String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max           Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min           Json?
+  ps            String?
+  selection     OrganizationsPreferenceExamReportStoolTestItemsStoolParasiteSelection?
+  tag           String?
+  type          String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit          Json?
+}
+
+type OrganizationsPreferenceExamReportStoolTestItemsStoolParasiteSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+}
+
+type OrganizationsPreferenceExamReportUrineTest {
+  en_label String
+  items    OrganizationsPreferenceExamReportUrineTestItems
+  label    String
+  name     String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItems {
+  appearance                OrganizationsPreferenceExamReportUrineTestItemsAppearance
+  bacteria                  OrganizationsPreferenceExamReportUrineTestItemsBacteria
+  bilirubin                 OrganizationsPreferenceExamReportUrineTestItemsBilirubin
+  bio_PH                    OrganizationsPreferenceExamReportUrineTestItemsBioPh?
+  color                     OrganizationsPreferenceExamReportUrineTestItemsColor?
+  crystal                   OrganizationsPreferenceExamReportUrineTestItemsCrystal?
+  crystal_select            OrganizationsPreferenceExamReportUrineTestItemsCrystalSelect?
+  cylinder                  OrganizationsPreferenceExamReportUrineTestItemsCylinder
+  epithelium                OrganizationsPreferenceExamReportUrineTestItemsEpithelium?
+  glucose                   OrganizationsPreferenceExamReportUrineTestItemsGlucose
+  ketone_body_num           OrganizationsPreferenceExamReportUrineTestItemsKetoneBodyNum?
+  ketone_body_select        OrganizationsPreferenceExamReportUrineTestItemsKetoneBodySelect?
+  leukocyte_esterase_num    OrganizationsPreferenceExamReportUrineTestItemsLeukocyteEsteraseNum?
+  leukocyte_esterase_select OrganizationsPreferenceExamReportUrineTestItemsLeukocyteEsteraseSelect?
+  nitrite_num               OrganizationsPreferenceExamReportUrineTestItemsNitriteNum?
+  nitrite_select            OrganizationsPreferenceExamReportUrineTestItemsNitriteSelect?
+  occultBlood               OrganizationsPreferenceExamReportUrineTestItemsOccultBlood
+  protein                   OrganizationsPreferenceExamReportUrineTestItemsProtein?
+  protein_select            OrganizationsPreferenceExamReportUrineTestItemsProteinSelect?
+  pus_cell                  OrganizationsPreferenceExamReportUrineTestItemsPusCell?
+  sg                        OrganizationsPreferenceExamReportUrineTestItemsSg?
+  urine_rbc                 OrganizationsPreferenceExamReportUrineTestItemsUrineRbc?
+  urine_rbc_num             OrganizationsPreferenceExamReportUrineTestItemsUrineRbcNum?
+  urine_rbc_range           OrganizationsPreferenceExamReportUrineTestItemsUrineRbcRange?
+  urine_rbc_select          OrganizationsPreferenceExamReportUrineTestItemsUrineRbcSelect?
+  urine_wbc                 OrganizationsPreferenceExamReportUrineTestItemsUrineWbc?
+  urine_wbc_num             OrganizationsPreferenceExamReportUrineTestItemsUrineWbcNum?
+  urine_wbc_range           OrganizationsPreferenceExamReportUrineTestItemsUrineWbcRange?
+  urine_wbc_select          OrganizationsPreferenceExamReportUrineTestItemsUrineWbcSelect?
+  urobilinogen              OrganizationsPreferenceExamReportUrineTestItemsUrobilinogen?
+  urobilinogen_num          OrganizationsPreferenceExamReportUrineTestItemsUrobilinogenNum?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsAppearance {
+  danger        Boolean?
+  dangerOptions String[]
+  en_label      String?
+  label         String?
+  max           String?
+  min           String?
+  ps            String?
+  selection     OrganizationsPreferenceExamReportUrineTestItemsAppearanceSelection?
+  tag           String?
+  type          String?
+  unit          String?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsAppearanceSelection {
+  Cloudy String? @map(" Cloudy")
+  Turbid String? @map(" Turbid")
+  Clear  String
+  Cloudy String?
+  Turbid String?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsBacteria {
+  danger        Boolean?
+  dangerOptions String[]
+  en_label      String?
+  label         String?
+  max           String?
+  min           String?
+  ps            String?
+  selection     OrganizationsPreferenceExamReportUrineTestItemsBacteriaSelection?
+  tag           String?
+  type          String?
+  unit          String?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsBacteriaSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2+ String @map("2+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 3+ String @map("3+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 4+ String @map("4+")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsBilirubin {
+  danger        Boolean?
+  dangerOptions String[]
+  en_label      String?
+  label         String?
+  max           String?
+  min           String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps            Json?
+  selection     OrganizationsPreferenceExamReportUrineTestItemsBilirubinSelection?
+  tag           String?
+  type          String?
+  unit          String?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsBilirubinSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 1+ String @map("1+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2+ String @map("2+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 3+ String @map("3+")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsBioPh {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit     Json?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsColor {
+  danger    Boolean
+  en_label  String
+  label     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min       Json?
+  ps        String
+  selection OrganizationsPreferenceExamReportUrineTestItemsColorSelection
+  tag       String
+  type      String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit      Json?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsColorSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 橘色 String @map("橘色")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 紅色 String @map("紅色")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 褐色 String @map("褐色")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 黃色 String @map("黃色")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 黑色 String @map("黑色")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsCrystal {
+  danger    Boolean
+  en_label  String
+  label     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min       Json?
+  ps        String
+  selection OrganizationsPreferenceExamReportUrineTestItemsCrystalSelection?
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsCrystalSelect {
+  danger    Boolean
+  en_label  String
+  label     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min       Json?
+  ps        String?
+  selection OrganizationsPreferenceExamReportUrineTestItemsCrystalSelectSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsCrystalSelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsCrystalSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsCylinder {
+  danger        Boolean?
+  dangerOptions String[]
+  en_label      String?
+  label         String?
+  max           String?
+  min           String?
+  ps            String?
+  selection     OrganizationsPreferenceExamReportUrineTestItemsCylinderSelection?
+  tag           String?
+  type          String?
+  unit          String?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsCylinderSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsEpithelium {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsGlucose {
+  danger        Boolean?
+  dangerOptions String[]
+  en_label      String?
+  label         String?
+  max           String?
+  min           String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps            Json?
+  selection     OrganizationsPreferenceExamReportUrineTestItemsGlucoseSelection?
+  tag           String?
+  type          String?
+  unit          String?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsGlucoseSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // +/- String @map("+/-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 1+ String @map("1+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2+ String @map("2+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 3+ String @map("3+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 4+ String @map("4+")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsKetoneBodyNum {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit     Json?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsKetoneBodySelect {
+  danger    Boolean
+  en_label  String
+  label     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps        Json?
+  selection OrganizationsPreferenceExamReportUrineTestItemsKetoneBodySelectSelection
+  tag       String
+  type      String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit      Json?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsKetoneBodySelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // +/- String? @map("+/-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsLeukocyteEsteraseNum {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit     Json?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsLeukocyteEsteraseSelect {
+  danger        Boolean
+  dangerOptions String[]
+  en_label      String
+  label         String
+  max           String
+  min           String
+  ps            String
+  selection     OrganizationsPreferenceExamReportUrineTestItemsLeukocyteEsteraseSelectSelection
+  tag           String
+  type          String
+  unit          String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsLeukocyteEsteraseSelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2+ String @map("2+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 3+ String @map("3+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 4+ String @map("4+")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsNitriteNum {
+  danger   Boolean
+  en_label String
+  label    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  max      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps       Json?
+  tag      String
+  type     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit     Json?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsNitriteSelect {
+  danger        Boolean
+  dangerOptions String[]
+  en_label      String
+  label         String
+  max           String?
+  min           String?
+  ps            String?
+  selection     OrganizationsPreferenceExamReportUrineTestItemsNitriteSelectSelection
+  tag           String
+  type          String
+  unit          String?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsNitriteSelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // +/- String? @map("+/-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2+ String @map("2+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 3+ String @map("3+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 4+ String @map("4+")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsOccultBlood {
+  danger        Boolean?
+  dangerOptions String[]
+  en_label      String?
+  label         String?
+  max           String?
+  min           String?
+  ps            String?
+  selection     OrganizationsPreferenceExamReportUrineTestItemsOccultBloodSelection?
+  tag           String?
+  type          String?
+  unit          String?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsOccultBloodSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String? @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // +/- String? @map("+/-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String? @map("-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2+ String @map("2+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 3+ String @map("3+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 4+ String @map("4+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 有 String? @map("有")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 無 String? @map("無")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // ＋/- String? @map("＋/-")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsProtein {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  min      Json?
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsProteinSelect {
+  danger        Boolean?
+  dangerOptions String[]
+  en_label      String?
+  label         String?
+  max           String?
+  min           String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  ps            Json?
+  selection     OrganizationsPreferenceExamReportUrineTestItemsProteinSelectSelection?
+  tag           String?
+  type          String?
+  unit          String?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsProteinSelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // +/- String @map("+/-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 1+ String @map("1+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2+ String @map("2+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 3+ String @map("3+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 4+ String @map("4+")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsPusCell {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  unit     Json?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsSg {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrineRbc {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrineRbcNum {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String
+  selection OrganizationsPreferenceExamReportUrineTestItemsUrineRbcNumSelection?
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrineRbcNumSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrineRbcRange {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrineRbcSelect {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String
+  selection OrganizationsPreferenceExamReportUrineTestItemsUrineRbcSelectSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrineRbcSelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String? @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String? @map("-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2+ String? @map("2+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 3+ String? @map("3+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 4+ String? @map("4+")
+  Numerous String?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrineWbc {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrineWbcNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrineWbcRange {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrineWbcSelect {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String
+  selection OrganizationsPreferenceExamReportUrineTestItemsUrineWbcSelectSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrineWbcSelectSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String? @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String? @map("-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2+ String? @map("2+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 3+ String? @map("3+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 4+ String? @map("4+")
+  Numerous String?
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrobilinogen {
+  danger    Boolean
+  en_label  String
+  label     String
+  max       String
+  min       String
+  ps        String?
+  selection OrganizationsPreferenceExamReportUrineTestItemsUrobilinogenSelection
+  tag       String
+  type      String
+  unit      String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrobilinogenNum {
+  danger   Boolean
+  en_label String
+  label    String
+  max      String
+  min      String
+  ps       String
+  tag      String
+  type     String
+  unit     String
+}
+
+type OrganizationsPreferenceExamReportUrineTestItemsUrobilinogenSelection {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // + String? @map("+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // - String @map("-")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 1+ String? @map("1+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2+ String? @map("2+")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 3+ String? @map("3+")
+}
+
+type OrganizationsPreferenceHealthDashboardGroups {
+  items OrganizationsPreferenceHealthDashboardGroupsItems[]
+  label String
+}
+
+type OrganizationsPreferenceHealthDashboardGroupsItems {
+  items OrganizationsPreferenceHealthDashboardGroupsItemsItems[]
+  range Int[]
+}
+
+type OrganizationsPreferenceHealthDashboardGroupsItemsItems {
+  contents OrganizationsPreferenceHealthDashboardGroupsItemsItemsContents[]
+  name     String
+  width    Int
+}
+
+type OrganizationsPreferenceHealthDashboardGroupsItemsItemsContents {
+  /// Multiple data types found: Float: 4.2%, Int: 95.8% out of 24 sampled entries
+  height        Json
+  hideXAxisText String?
+  name          String
+}
+
+type OrganizationsPreferenceMars {
+  enabled    Boolean
+  refillDays Int
+  sendTime   String
+}
+
+type OrganizationsPreferenceMedicalRecordShiftSort {
+  dayShift     Int
+  eveningShift Int
+  nightShift   Int
+}
+
+type OrganizationsPreferenceNutritionMeal {
+  oralFeeding OrganizationsPreferenceNutritionMealOralFeeding
+  tubeFeeding OrganizationsPreferenceNutritionMealTubeFeeding
+}
+
+type OrganizationsPreferenceNutritionMealOralFeeding {
+  meal1  OrganizationsPreferenceNutritionMealOralFeedingMeal1
+  meal2  OrganizationsPreferenceNutritionMealOralFeedingMeal2
+  meal3  OrganizationsPreferenceNutritionMealOralFeedingMeal3
+  snack1 OrganizationsPreferenceNutritionMealOralFeedingSnack1
+  snack2 OrganizationsPreferenceNutritionMealOralFeedingSnack2
+  snack3 OrganizationsPreferenceNutritionMealOralFeedingSnack3
+}
+
+type OrganizationsPreferenceNutritionMealOralFeedingMeal1 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealOralFeedingMeal2 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealOralFeedingMeal3 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealOralFeedingSnack1 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealOralFeedingSnack2 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealOralFeedingSnack3 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeeding {
+  meal1      OrganizationsPreferenceNutritionMealTubeFeedingMeal1
+  meal2      OrganizationsPreferenceNutritionMealTubeFeedingMeal2
+  meal3      OrganizationsPreferenceNutritionMealTubeFeedingMeal3
+  meal4      OrganizationsPreferenceNutritionMealTubeFeedingMeal4
+  meal5      OrganizationsPreferenceNutritionMealTubeFeedingMeal5
+  meal6      OrganizationsPreferenceNutritionMealTubeFeedingMeal6
+  mealWater1 OrganizationsPreferenceNutritionMealTubeFeedingMealWater1
+  mealWater2 OrganizationsPreferenceNutritionMealTubeFeedingMealWater2
+  mealWater3 OrganizationsPreferenceNutritionMealTubeFeedingMealWater3
+  mealWater4 OrganizationsPreferenceNutritionMealTubeFeedingMealWater4
+  mealWater5 OrganizationsPreferenceNutritionMealTubeFeedingMealWater5
+  mealWater6 OrganizationsPreferenceNutritionMealTubeFeedingMealWater6
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeedingMeal1 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeedingMeal2 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeedingMeal3 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeedingMeal4 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeedingMeal5 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeedingMeal6 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeedingMealWater1 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeedingMealWater2 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeedingMealWater3 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeedingMealWater4 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeedingMealWater5 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferenceNutritionMealTubeFeedingMealWater6 {
+  enabled Boolean
+  time    String
+}
+
+type OrganizationsPreferencePhysiologicalSetting {
+  defecationAmountSetting String
+  defecationDefault       String
+  fieldCanFill            String[]
+  totalSetting            String
+}
+
+type OrganizationsPreferencePrintPatientInfo {
+  age           String
+  birthday      String
+  checkInDate   String
+  idNumber      String
+  patientNumber String
+  recordNumber  String
+  sex           String
+}
+
+type OrganizationsPreferencePrints {
+  mar           String
+  medicalrecord String
+}
+
+type OrganizationsPreferenceQualityIndicator {
+  bedsore         OrganizationsPreferenceQualityIndicatorBedsore
+  fallEvent       OrganizationsPreferenceQualityIndicatorFallEvent
+  foleyRemoval    OrganizationsPreferenceQualityIndicatorFoleyRemoval
+  infection       OrganizationsPreferenceQualityIndicatorInfection
+  ngRemoval       OrganizationsPreferenceQualityIndicatorNgRemoval
+  pain            OrganizationsPreferenceQualityIndicatorPain
+  restraint       OrganizationsPreferenceQualityIndicatorRestraint
+  unplannedHosp   OrganizationsPreferenceQualityIndicatorUnplannedHosp
+  unplannedWeight OrganizationsPreferenceQualityIndicatorUnplannedWeight
+}
+
+type OrganizationsPreferenceQualityIndicatorBedsore {
+  threshold Float
+}
+
+type OrganizationsPreferenceQualityIndicatorFallEvent {
+  threshold Float
+}
+
+type OrganizationsPreferenceQualityIndicatorFoleyRemoval {
+  threshold Float
+}
+
+type OrganizationsPreferenceQualityIndicatorInfection {
+  threshold Float
+}
+
+type OrganizationsPreferenceQualityIndicatorNgRemoval {
+  threshold Float
+}
+
+type OrganizationsPreferenceQualityIndicatorPain {
+  threshold Float
+}
+
+type OrganizationsPreferenceQualityIndicatorRestraint {
+  threshold Float
+}
+
+type OrganizationsPreferenceQualityIndicatorUnplannedHosp {
+  threshold Float
+}
+
+type OrganizationsPreferenceQualityIndicatorUnplannedWeight {
+  threshold Float
+}
+
+type OrganizationsPreferenceRegularFreqSetting {
+  freqSetting_MMSE                             Int?
+  freqSetting_NPIQ                             Int?
+  freqSetting_OTEval                           Int?
+  freqSetting_PTEval                           Int?
+  freqSetting_Swallowing                       Int?
+  freqSetting_assistiveTechnologyAssessment    Int?
+  freqSetting_barthel                          Int?
+  freqSetting_barthelDC                        Int?
+  freqSetting_bodyEvaluation                   Int?
+  freqSetting_bsrs                             Int?
+  freqSetting_cognitive                        Int?
+  freqSetting_depression                       Int?
+  freqSetting_dietassess                       Int?
+  freqSetting_drugSafety                       Int?
+  freqSetting_eq5d                             Int?
+  freqSetting_examreport                       Int?
+  freqSetting_examreport2                      Int?
+  freqSetting_fall                             Int?
+  freqSetting_fallRisk                         Int?
+  freqSetting_frailtyAssessment                Int?
+  freqSetting_healthHabit                      Int?
+  freqSetting_homeRecord                       Int?
+  freqSetting_iadlassessment                   Int?
+  freqSetting_iadlassessmentDC                 Int?
+  freqSetting_individualSupervise              Int?
+  freqSetting_individualcase                   Int?
+  freqSetting_issueEmotion                     Int?
+  freqSetting_medicalHistory                   Int?
+  freqSetting_mininutrition                    Int?
+  freqSetting_need                             Int?
+  freqSetting_nsi                              Int?
+  freqSetting_nursingdiagnosis                 Int?
+  freqSetting_pharmacistEvaluation             Int?
+  freqSetting_phyasst                          Int?
+  freqSetting_pressure                         Int?
+  freqSetting_teleRecord                       Int?
+  monthsSetting_MMSE                           String[]
+  monthsSetting_NPIQ                           String[]
+  monthsSetting_OTEval                         String[]
+  monthsSetting_PTEval                         String[]
+  monthsSetting_Swallowing                     String[]
+  monthsSetting_assistiveTechnologyAssessment  String[]
+  monthsSetting_badl                           String[]
+  monthsSetting_barthel                        String[]
+  monthsSetting_barthelDC                      String[]
+  monthsSetting_bodyEvaluation                 String[]
+  monthsSetting_bsrs                           String[]
+  monthsSetting_cognitive                      String[]
+  monthsSetting_depression                     String[]
+  monthsSetting_dietassess                     String[]
+  monthsSetting_drugSafety                     String[]
+  monthsSetting_eq5d                           String[]
+  monthsSetting_examreport                     String[]
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  monthsSetting_examreport2                    Json?
+  monthsSetting_fall                           String[]
+  monthsSetting_fallRisk                       String[]
+  monthsSetting_frailtyAssessment              String[]
+  monthsSetting_healthHabit                    String[]
+  monthsSetting_homeRecord                     String[]
+  monthsSetting_iadlassessment                 String[]
+  monthsSetting_iadlassessmentDC               String[]
+  monthsSetting_individualSupervise            String[]
+  monthsSetting_individualcase                 String[]
+  monthsSetting_medicalHistory                 String[]
+  monthsSetting_mininutrition                  String[]
+  monthsSetting_need                           String[]
+  monthsSetting_nsi                            String[]
+  monthsSetting_nursingdiagnosis               String[]
+  monthsSetting_pharmacistEvaluation           String[]
+  monthsSetting_phyasst                        String[]
+  monthsSetting_pressure                       String[]
+  monthsSetting_teleRecord                     String[]
+  needSetting_MMSE                             String
+  needSetting_NPIQ                             String
+  needSetting_OTEval                           String
+  needSetting_PTEval                           String
+  needSetting_Swallowing                       String
+  needSetting_assistiveTechnologyAssessment    String
+  needSetting_badl                             String
+  needSetting_barthel                          String
+  needSetting_barthelDC                        String?
+  needSetting_bodyEvaluation                   String?
+  needSetting_bsrs                             String
+  needSetting_careplan                         String?
+  needSetting_cognitive                        String?
+  needSetting_depression                       String
+  needSetting_dietassess                       String
+  needSetting_drugSafety                       String?
+  needSetting_eq5d                             String
+  needSetting_examreport                       String
+  needSetting_examreport2                      String?
+  needSetting_fall                             String
+  needSetting_fallRisk                         String?
+  needSetting_frailtyAssessment                String?
+  needSetting_healthHabit                      String?
+  needSetting_homeRecord                       String?
+  needSetting_iadlassessment                   String
+  needSetting_iadlassessmentDC                 String?
+  needSetting_individualSupervise              String?
+  needSetting_individualcase                   String
+  needSetting_issueEmotion                     String?
+  needSetting_medicalHistory                   String?
+  needSetting_mininutrition                    String?
+  needSetting_need                             String
+  needSetting_nsi                              String
+  needSetting_nursingdiagnosis                 String
+  needSetting_pharmacistEvaluation             String?
+  needSetting_phyasst                          String
+  needSetting_pressure                         String
+  needSetting_teleRecord                       String?
+  /// Multiple data types found: String: 3.3%, Int: 96.7% out of 61 sampled entries
+  newCheckInRemindSetting_pharmacistEvaluation Json?
+  remindSetting_MMSE                           String?
+  remindSetting_NPIQ                           String?
+  remindSetting_OTEval                         String?
+  remindSetting_PTEval                         String?
+  remindSetting_Swallowing                     String?
+  remindSetting_assistiveTechnologyAssessment  String?
+  remindSetting_badl                           String?
+  remindSetting_barthel                        String?
+  /// Multiple data types found: String: 87.5%, Int: 12.5% out of 8 sampled entries
+  remindSetting_barthelDC                      Json?
+  remindSetting_bodyEvaluation                 String?
+  remindSetting_bsrs                           String?
+  remindSetting_careplan                       String?
+  remindSetting_cognitive                      String?
+  remindSetting_depression                     String?
+  remindSetting_dietassess                     String?
+  remindSetting_drugSafety                     String?
+  remindSetting_fall                           String?
+  remindSetting_fallRisk                       String?
+  remindSetting_frailtyAssessment              String?
+  remindSetting_healthHabit                    String?
+  remindSetting_homeRecord                     String?
+  remindSetting_iadlassessment                 String?
+  remindSetting_iadlassessmentDC               String?
+  /// Multiple data types found: String: 66.7%, Int: 33.3% out of 3 sampled entries
+  remindSetting_individualSupervise            Json?
+  /// Multiple data types found: String: 98.6%, Int: 1.4% out of 71 sampled entries
+  remindSetting_individualcase                 Json?
+  remindSetting_issueEmotion                   String?
+  remindSetting_medicalHistory                 String?
+  remindSetting_mininutrition                  String?
+  remindSetting_need                           String?
+  remindSetting_nsi                            String?
+  remindSetting_nursingdiagnosis               String?
+  remindSetting_pharmacistEvaluation           String?
+  remindSetting_phyasst                        String?
+  remindSetting_pressure                       String?
+  remindSetting_teleRecord                     String?
+  settingType                                  String?
+}
+
+type OrganizationsPreferenceShifts {
+  enable         Boolean?
+  enabled        Boolean
+  name           String
+  sendTime       String
+  thumbnailImage String
+  timeEnd        String
+  timeStart      String
+  value          String
+}
+
+type OrganizationsPreferenceSummaryFormSetting {
+  hr         String[] @map("72hr")
+  hrForPrint String[] @map("72hrForPrint")
+  evaluate   String[]
+}
+
+type OrganizationsPreferenceUnits {
+  BloodSugar    String?
+  O2Supply      String?
+  PR            String?
+  RR            String?
+  SPO2          String?
+  TP            String
+  bloodPressure String?
+  height        String?
+  weight        String?
+}
+
+type OrganizationsPreferenceVitalsignAlert {
+  DIA     OrganizationsPreferenceVitalsignAlertDia?
+  PR      OrganizationsPreferenceVitalsignAlertPr?
+  RR      OrganizationsPreferenceVitalsignAlertRr?
+  SPO2    OrganizationsPreferenceVitalsignAlertSpo2?
+  SYS     OrganizationsPreferenceVitalsignAlertSys?
+  TP      OrganizationsPreferenceVitalsignAlertTp
+  enabled Boolean
+}
+
+type OrganizationsPreferenceVitalsignAlertDia {
+  enabled      Boolean
+  maxValue     String
+  maxValueSign String
+  minValue     String
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignAlertPr {
+  enabled      Boolean
+  maxValue     String
+  maxValueSign String
+  minValue     String
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignAlertRr {
+  enabled      Boolean
+  maxValue     String
+  maxValueSign String
+  minValue     String
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignAlertSpo2 {
+  enabled      Boolean
+  maxValue     String
+  maxValueSign String
+  minValue     String
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignAlertSys {
+  enabled      Boolean
+  maxValue     String
+  maxValueSign String
+  minValue     String
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignAlertTp {
+  enabled      Boolean
+  maxValue     String
+  maxValueSign String
+  minValue     String
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignMild {
+  DIA  OrganizationsPreferenceVitalsignMildDia
+  PAIN OrganizationsPreferenceVitalsignMildPain
+  PR   OrganizationsPreferenceVitalsignMildPr
+  RR   OrganizationsPreferenceVitalsignMildRr
+  SPO2 OrganizationsPreferenceVitalsignMildSpo2
+  SYS  OrganizationsPreferenceVitalsignMildSys
+  TP   OrganizationsPreferenceVitalsignMildTp
+}
+
+type OrganizationsPreferenceVitalsignMildDia {
+  /// Multiple data types found: String: 5.1%, Int: 94.9% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 7.2%, Int: 92.8% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignMildPain {
+  /// Multiple data types found: String: 12.5%, Int: 87.5% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 12.5%, Int: 87.5% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignMildPr {
+  /// Multiple data types found: String: 93%, Int: 7% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 8.7%, Int: 91.3% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignMildRr {
+  /// Multiple data types found: String: 8.5%, Int: 91.5% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 89.4%, Int: 10.6% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignMildSpo2 {
+  /// Multiple data types found: String: 3%, Int: 97% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 9.8%, Int: 90.2% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignMildSys {
+  /// Multiple data types found: String: 9.4%, Int: 90.6% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 5.8%, Int: 94.2% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignMildTp {
+  /// Multiple data types found: String: 91.9%, Float: 7.9%, Int: 0.2% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 89.4%, Float: 10.4%, Int: 0.2% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignSevere {
+  DIA  OrganizationsPreferenceVitalsignSevereDia
+  PAIN OrganizationsPreferenceVitalsignSeverePain
+  PR   OrganizationsPreferenceVitalsignSeverePr
+  RR   OrganizationsPreferenceVitalsignSevereRr
+  SPO2 OrganizationsPreferenceVitalsignSevereSpo2
+  SYS  OrganizationsPreferenceVitalsignSevereSys
+  TP   OrganizationsPreferenceVitalsignSevereTp
+}
+
+type OrganizationsPreferenceVitalsignSevereDia {
+  /// Multiple data types found: String: 15.5%, Int: 84.5% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 3.8%, Int: 96.2% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignSeverePain {
+  /// Multiple data types found: String: 11.5%, Int: 88.5% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 13.4%, Int: 86.6% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignSeverePr {
+  /// Multiple data types found: String: 90%, Int: 10% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 5.1%, Int: 94.9% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignSevereRr {
+  /// Multiple data types found: String: 4.7%, Int: 95.3% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 4.5%, Int: 95.5% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignSevereSpo2 {
+  /// Multiple data types found: String: 2.5%, Int: 97.5% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 5.3%, Int: 94.7% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignSevereSys {
+  /// Multiple data types found: String: 4.9%, Int: 95.1% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 5.5%, Int: 94.5% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPreferenceVitalsignSevereTp {
+  /// Multiple data types found: String: 17.5%, Float: 0.2%, Int: 82.3% out of 530 sampled entries
+  maxValue     Json
+  maxValueSign String
+  /// Multiple data types found: String: 91.3%, Float: 8.7% out of 530 sampled entries
+  minValue     Json
+  minValueSign String
+}
+
+type OrganizationsPrintSetting {
+  checkIn       OrganizationsPrintSettingCheckIn?
+  checkOut      OrganizationsPrintSettingCheckOut?
+  duplicate     OrganizationsPrintSettingDuplicate?
+  printHeader   OrganizationsPrintSettingPrintHeader?
+  privacy       OrganizationsPrintSettingPrivacy?
+  receiptNumber OrganizationsPrintSettingReceiptNumber
+  salarySlip    OrganizationsPrintSettingSalarySlip?
+  signature     OrganizationsPrintSettingSignature?
+  stamps        OrganizationsPrintSettingStamps[]
+  triplicate    OrganizationsPrintSettingTriplicate?
+}
+
+type OrganizationsPrintSettingCheckIn {
+  monthFormat          String
+  prefix               String
+  restartByInstallment String
+  runningNumber        String
+  suffix               String
+  yearFormat           String
+}
+
+type OrganizationsPrintSettingCheckOut {
+  monthFormat          String
+  prefix               String
+  restartByInstallment String
+  runningNumber        String
+  suffix               String
+  yearFormat           String
+}
+
+type OrganizationsPrintSettingDuplicate {
+  first  String
+  second String
+}
+
+type OrganizationsPrintSettingPrintHeader {
+  CMSLevel           String?
+  age                String
+  birthday           String
+  caseNumber         String?
+  checkInDate        String?
+  cmsLevel           String?
+  dateOfFirstService String?
+  dateOpened         String?
+  idNumber           String
+  mailingAddress     String?
+  numbering          String?
+  patientNumber      String?
+  recordNumber       String
+  residentialAddress String?
+  sex                String
+}
+
+type OrganizationsPrintSettingPrivacy {
+  idNumberMask String
+}
+
+type OrganizationsPrintSettingReceiptNumber {
+  dateDivider          String?
+  dateSuffix           String?
+  monthFormat          String?
+  prefix               String?
+  restartByInstallment String
+  runningNumber        String
+  suffix               String?
+  yearFormat           String?
+}
+
+type OrganizationsPrintSettingSalarySlip {
+  additionItems  String[]
+  deductionItems String[]
+}
+
+type OrganizationsPrintSettingSignature {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 0 OrganizationsPrintSettingSignature0 @map("0")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 1 OrganizationsPrintSettingSignature1 @map("1")
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  // 2 OrganizationsPrintSettingSignature2 @map("2")
+}
+
+type OrganizationsPrintSettingSignature0 {
+  label String
+}
+
+type OrganizationsPrintSettingSignature1 {
+  label String
+}
+
+type OrganizationsPrintSettingSignature2 {
+  label String
+}
+
+type OrganizationsPrintSettingStamps {
+  image String[]
+  label String?
+}
+
+type OrganizationsPrintSettingTriplicate {
+  first  String
+  second String
+  third  String
+}
+
+type OrganizationsRoombed {
+  bed         String?
+  branch      String
+  displayName String
+  room        String
+}
+
+type OrganizationsSecuritySetting {
+  passwordExpired OrganizationsSecuritySettingPasswordExpired?
+  passwordRules   OrganizationsSecuritySettingPasswordRules[]
+}
+
+type OrganizationsSecuritySettingPasswordExpired {
+  check                    Boolean
+  checkLastPasswordHistory Int
+  passwordExpiredSetting   Int
+}
+
+type OrganizationsSecuritySettingPasswordRules {
+  id                  String?                                        @map("_id") @db.ObjectId
+  describe            String
+  props               OrganizationsSecuritySettingPasswordRulesProps
+  requireOrNotallowed String
+}
+
+type OrganizationsSecuritySettingPasswordRulesProps {
+  /// Multiple data types found: Float: 0.9%, Int: 99.1% out of 110 sampled entries
+  number Json
+}
+
+type OrganizationsShiftListSource {
+  apikey String
+  url    String
+}
+
+type UsersFavorServiceArea {
+  city   String
+  region String[]
+}
+
+type UsersPreference {
+  /// Multiple data types found: String: 99.5%, Int: 0.5% out of 663 sampled entries
+  branch                Json?
+  era                   String?
+  healthDashboardGroups UsersPreferenceHealthDashboardGroups[]
+  locale                String?
+  selectBranch          String?
+  staff                 String?
+}
+
+type UsersPreferenceHealthDashboardGroups {
+  items UsersPreferenceHealthDashboardGroupsItems[]
+  label String
+}
+
+type UsersPreferenceHealthDashboardGroupsItems {
+  items UsersPreferenceHealthDashboardGroupsItemsItems[]
+  range Int[]
+}
+
+type UsersPreferenceHealthDashboardGroupsItemsItems {
+  contents UsersPreferenceHealthDashboardGroupsItemsItemsContents[]
+  name     String
+  width    Int
+}
+
+type UsersPreferenceHealthDashboardGroupsItemsItemsContents {
+  /// Multiple data types found: Float: 3.1%, Int: 96.9% out of 258 sampled entries
+  height        Json
+  hiddenLegend  String?
+  hideXAxisText String?
+  name          String
+}
+
+model bsrs {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  v            Int            @map("__v")
+  createdDate  DateTime       @db.Date
+  organization String         @db.ObjectId
+  patient      String         @db.ObjectId
+  questions    BsrsQuestions?
+  score        Int?
+  unassessable String?
+  user         String         @db.ObjectId
+}
+
+model organizations {
+  id                                 String                            @id @default(auto()) @map("_id") @db.ObjectId
+  EOL                                Boolean?
+  OAuthService                       String[]
+  v                                  Int                               @map("__v")
+  activeModules                      String[]
+  address                            String
+  addressCity                        String?
+  addressDistrict                    String?
+  allowPatientLogin                  Boolean?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  applyApps                          Json?
+  /// Multiple data types found: String: 1.5%, Int: 98.5% out of 533 sampled entries
+  approvedBeds                       Json?
+  approvedBedsHistory                OrganizationsApprovedBedsHistory?
+  apps                               String?
+  archive                            Boolean?
+  bankAccount                        String?
+  bankCode                           String?
+  bedNum                             Int?
+  bloodSugarSetting                  OrganizationsBloodSugarSetting?
+  branch                             String[]
+  chatGroup                          String?
+  chatGroupUrl                       String?
+  country                            String?
+  createdDate                        DateTime?                         @db.Date
+  /// Multiple data types found: String: 18%, Array(String): 82% out of 179 sampled entries
+  customerServiceGroup               Json?
+  customerServiceUrl                 String?
+  customerUrl                        String?
+  dashboardCardSettings              String[]
+  defaultTransitionTime              Int?
+  departmentSource                   OrganizationsDepartmentSource?
+  doltcCredentials                   OrganizationsDoltcCredentials?
+  enableLine                         Boolean?
+  enableSidebar                      Boolean
+  endServiceTime                     DateTime?                         @db.Date
+  establishmentNumber                String?
+  evaluateFormSetting                OrganizationsEvaluateFormSetting?
+  faceRecognitionDeviceIds           String[]
+  faceRecognitionDeviceOK            Boolean?
+  familyLine                         Boolean
+  familyLine2                        Boolean
+  familyLineModules                  String[]
+  fax                                String?
+  flexibleWorkTime                   String?
+  flexibleWorkTimeType               String?
+  floor                              String?
+  hasDebt                            Boolean?
+  idNumber                           String?
+  importSource                       OrganizationsImportSource[]
+  internalOrg                        Boolean?
+  isTransitionTimeCountedInWorkHours Boolean?
+  jubosolution                       String?
+  lat                                Float?
+  lineVIP                            Boolean?
+  lng                                Float?
+  logo                               String[]
+  mail                               String?
+  manageKit                          Boolean?
+  name                               String
+  nhcCredentials                     OrganizationsNhcCredentials?
+  nickName                           String
+  openCareplan                       Boolean?
+  overtimeMark                       Boolean?
+  owner                              String?                           @db.ObjectId
+  ownerName                          String
+  preference                         OrganizationsPreference?
+  printSetting                       OrganizationsPrintSetting?
+  registrationNumber                 String?
+  roombed                            OrganizationsRoombed[]
+  securitySetting                    OrganizationsSecuritySetting?
+  shiftListSource                    OrganizationsShiftListSource?
+  showDOLTCCategory                  Boolean?
+  showMohwCategory                   Boolean?
+  solution                           String
+  stampDutyNumber                    String?
+  startServiceTime                   DateTime?                         @db.Date
+  subSolution                        String?
+  syncServerUrl                      String?
+  tel                                String
+  transferAccount                    String?
+  transitionTimeInWorkHours          Boolean?
+  type                               String
+  /// Multiple data types found: String: 2.1%, Float: 56.3%, Int: 41.7% out of 48 sampled entries
+  unitNo                             Json?
+  updatedDate                        DateTime                          @db.Date
+  withHrManagementSystem             Boolean?
+}
+
+model users {
+  id                                 String                  @id @default(auto()) @map("_id") @db.ObjectId
+  Address                            String?
+  ContactMobileNumber                String?
+  ContactPhoneNumber                 String?
+  OAuthService                       String[]
+  RelationshipWithContacts           String?
+  v                                  Int                     @map("__v")
+  accountEnable                      String?
+  agreedSalary                       Int?
+  basicSalary                        Int?
+  birthday                           DateTime?               @db.Date
+  certificateNo                      String?
+  certificateWord                    String?
+  classCertificationUpload           String[]
+  classCertificationUploadPDF        String[]
+  classNumber                        String?
+  competencyCertification            String[]
+  contactAddress                     String?
+  contactAddressArea                 String?
+  contactAddressCity                 String?
+  contactPersonName                  String?
+  created                            DateTime                @db.Date
+  dbCreatedDate                      DateTime?               @db.Date
+  dbUpdatedDate                      DateTime?               @db.Date
+  defaultShift                       String?
+  degree                             String?
+  department                         String?
+  displayName                        String?
+  education                          String?
+  email                              String?
+  employDate                         DateTime?               @db.Date
+  employType                         String?
+  employeeNumber                     String?
+  enable                             Boolean?
+  extension                          String?
+  favorServiceArea                   UsersFavorServiceArea[]
+  fireDutyDuties                     String?
+  fireMarshalling                    String?
+  fireTaskTitle                      String?
+  firstName                          String
+  graduatedSchool                    String?
+  healthInsuranceBurdenExpense       Int?
+  healthInsuranceFamilyExpense       Int?
+  healthInsuranceFamilyNumber        Int?
+  hiddenInTheSchedule                String?
+  holiday                            Int[]
+  hourlyRate                         Int?
+  idNumber                           String?
+  injury                             String?
+  introducer                         String[]
+  jobTitle                           String?
+  jobType                            String?
+  juboAdmin                          Boolean?
+  juboAdminUniqueEmail               String?
+  laborAndHealthInsuranceRange       String?
+  laborInsuranceBurdenExpense        Int?
+  laborInsuranceDate                 DateTime?               @db.Date
+  lastName                           String
+  licenseNo                          String?
+  licenseWord                        String?
+  lineStatus                         Boolean?
+  mainTakeCarerAddress               String?
+  mainTakeCarerAddressArea           String?
+  mainTakeCarerAddressCity           String?
+  memberMainSupervise                String?                 @db.ObjectId
+  memberMainSupervises               String[]
+  memberTraining                     String?
+  mobilePhone                        String?
+  nativeLanguage                     String[]
+  note                               String?
+  notificationLastOpenedDate         DateTime?               @db.Date
+  offDay                             Int[]
+  organization                       String                  @db.ObjectId
+  otherMattersToBeRecorded           String?
+  password                           String?
+  passwordExpiredDate                DateTime?               @db.Date
+  passwordLastUpdateDate             DateTime?               @db.Date
+  paymentRule                        String[]
+  phoneNumber                        String?
+  photoUrl                           String?
+  preference                         UsersPreference?
+  professionalCertification          String[]
+  professionalCertificationPDFUpload String[]
+  professionalCertificationUpload    String[]
+  provider                           String
+  registeredAddress                  String?
+  registeredAddressArea              String?
+  registeredAddressCity              String?
+  religion                           String[]
+  remark                             String?
+  resignDate                         DateTime?               @db.Date
+  rewardsAndPunishments              String?
+  roles                              String[]
+  salt                               String?
+  serno                              Int?
+  serviceHabit                       String?
+  serviceLimit                       String[]
+  sex                                String?
+  sfaaAccount                        String?
+  sfaaIdNumber                       String?
+  staffCardNumber                    String?
+  staffContPhone                     String?
+  staffRank                          String?
+  staffStatus                        String
+  supervisor                         String?                 @db.ObjectId
+  systemDepartment                   String?
+  traffic                            String[]
+  transitionHourlyRate               Int?
+  useSchedule                        String?
+  userGroup                          String?                 @db.ObjectId
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  usergroup                          Json?
+  username                           String
+  workExperience                     String?
+  workingHours                       Int?
+  yearsStartingDate                  DateTime?               @db.Date
 }
