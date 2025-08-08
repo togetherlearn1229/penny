@@ -3385,7 +3385,7 @@ model users {
   ContactPhoneNumber                 String?
   OAuthService                       String[]
   RelationshipWithContacts           String?
-  v                                  Int                     @map("__v")
+  v                                  Json                    @map("__v")
   accountEnable                      String?
   agreedSalary                       Int?
   basicSalary                        Int?
@@ -3459,7 +3459,7 @@ model users {
   paymentRule                        String[]
   phoneNumber                        String?
   photoUrl                           String?
-  preference                         UsersPreference?
+  preference                         Json?
   professionalCertification          String[]
   professionalCertificationPDFUpload String[]
   professionalCertificationUpload    String[]
