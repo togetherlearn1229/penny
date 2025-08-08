@@ -15,12 +15,13 @@
     "preset": "@repo/jest-presets/node"
   },
   "dependencies": {
-    "@prisma/client": "^6.13.0",
+    "@prisma/client": "6.13.0",
     "@repo/logger": "0.0.0",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "express": "4.21.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "prisma": "6.13.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
