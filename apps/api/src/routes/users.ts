@@ -8,9 +8,8 @@ const router = Router();
 // GET /users - Get all users
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const users = await prisma.users.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
+    console.log('prisma: ', prisma);
+    const users = await prisma.users.findMany({});
 
     res.json({ success: true, data: users });
   } catch (error) {
