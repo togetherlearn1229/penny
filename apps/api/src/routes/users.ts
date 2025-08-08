@@ -7,12 +7,12 @@ const router = Router();
 // GET /users - Get all users
 router.get("/", async (req: Request, res: Response) => {
   try {
-    console.log("prisma: ", prisma);
     const users = await prisma.users.findMany({
       select: {
-        id: true,
-        Address: true,
+        remark: true,
         employeeNumber: true,
+        id: true,
+        displayName: true,
       },
     });
 
