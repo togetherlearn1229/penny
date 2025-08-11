@@ -1,11 +1,12 @@
 import "dotenv/config";
 import fs from "node:fs";
 import pdf from "pdf-parse";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { Document } from "@langchain/core/documents";
 import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone as PineconeClient } from "@pinecone-database/pinecone";
 import { OpenAIEmbeddings } from "@langchain/openai";
+
 console.log("process.env.PINECONE_INDEX", process.env.PINECONE_INDEX);
 console.log("process.env.PINECONE_API_KEY", process.env.PINECONE_API_KEY);
 const embedding = async () => {
