@@ -16,43 +16,9 @@ import { createRetrieverTool } from "langchain/tools/retriever";
 import { pull } from "langchain/hub";
 import { z } from "zod";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
+import readline from "node:readline";
 
-const GraphState = Annotation.Root({
-  messages: Annotation<BaseMessage[]>({
-    reducer: (x, y) => x.concat(y),
-    default: () => [],
-  }),
-});
-
-// from langchain import hub
-
-// 模型：使用 OpenAI GPT
-const agentModel = new ChatOpenAI({
-  temperature: 0,
-  model: "gpt-4.1",
-  //   apiKey: process.env.OPENAI_API_KEY,
-});
-
-// 記憶體：讓 agent 記住上下文
-const agentCheckpointer = new MemorySaver();
-
-// // // 建立 ReAct 代理
-// const agent = createReactAgent({
-//   llm: agentModel,
-//   tools: [],
-//   checkpointSaver: agentCheckpointer,
-// });
-
-// // // 第一次提問
-// const agentFinalState = await agent.invoke(
-//   { messages: [new HumanMessage("請問我的爸爸是他的弟弟，我叫她要叫什麼?")] },
-//   { configurable: { thread_id: "42" } }
-// );
-
-// console.log(
-//   agentFinalState.messages[agentFinalState.messages.length - 1].content
-// );
-
+// 連上 PineconeStore 並將其作為 retriever
 const embeddings = new OpenAIEmbeddings({
   model: "text-embedding-3-large",
   dimensions: 1024,
@@ -64,21 +30,24 @@ const pineconeIndex = pinecone.Index(process.env.PINECONE_INDEX!);
 
 const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
   pineconeIndex,
-  // Maximum number of batch requests to allow at once. Each batch is 1000 vectors.
   maxConcurrency: 5,
-  // You can pass a namespace here too
-  // namespace: "foo",
 });
 
-// embeddings: EmbeddingsInterface, params: PineconeStoreParams
 const retriever = vectorStore.asRetriever();
 
+// 將 retriever 封裝為 tool
 const tool = createRetrieverTool(retriever, {
-  name: "retrieve_blog_posts",
-  description:
-    "Search and return information about Lilian Weng blog posts on LLM agents, prompt engineering, and adversarial attacks on LLMs.",
+  name: "勞基法法條 retriever",
+  description: "Search and return information about 勞基法法條資訊",
 });
 const tools = [tool];
+
+const GraphState = Annotation.Root({
+  messages: Annotation<BaseMessage[]>({
+    reducer: (x, y) => x.concat(y),
+    default: () => [],
+  }),
+});
 
 const toolNode = new ToolNode<typeof GraphState.State>(tools);
 
@@ -198,6 +167,7 @@ function checkRelevance(state: typeof GraphState.State): string {
     console.log("---DECISION: DOCS RELEVANT---");
     return "yes";
   }
+
   console.log("---DECISION: DOCS NOT RELEVANT---");
   return "no";
 }
