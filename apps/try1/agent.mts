@@ -37,7 +37,7 @@ const retriever = vectorStore.asRetriever();
 
 // 將 retriever 封裝為 tool
 const tool = createRetrieverTool(retriever, {
-  name: "勞基法法條 retriever",
+  name: "labor_law_retriever",
   description: "Search and return information about 勞基法法條資訊",
 });
 const tools = [tool];
@@ -71,6 +71,7 @@ const toolNode = new ToolNode<typeof GraphState.State>(tools);
 function shouldRetrieve(state: typeof GraphState.State): string {
   const { messages } = state;
   console.log("---DECIDE TO RETRIEVE---");
+  console.log(" messages", messages);
   const lastMessage = messages[messages.length - 1];
 
   if (
@@ -100,6 +101,7 @@ async function gradeDocuments(
   console.log("---GET RELEVANCE---");
 
   const { messages } = state;
+  console.log(" messages", messages);
   const tool = {
     name: "give_relevance_score",
     description: "Give a relevance score to the retrieved documents.",
@@ -136,7 +138,7 @@ async function gradeDocuments(
     question: messages[0].content as string,
     context: lastMessage.content as string,
   });
-
+  console.log("score", score);
   return {
     messages: [score],
   };
@@ -152,6 +154,7 @@ function checkRelevance(state: typeof GraphState.State): string {
   console.log("---CHECK RELEVANCE---");
 
   const { messages } = state;
+  console.log(" messages", messages);
   const lastMessage = messages[messages.length - 1];
   if (!("tool_calls" in lastMessage)) {
     throw new Error(
@@ -187,6 +190,7 @@ async function agent(
   console.log("---CALL AGENT---");
 
   const { messages } = state;
+  console.log(" messages", messages);
   // Find the AIMessage which contains the `give_relevance_score` tool call,
   // and remove it if it exists. This is because the agent does not need to know
   // the relevance score.
@@ -209,6 +213,7 @@ async function agent(
   }).bindTools(tools);
 
   const response = await model.invoke(filteredMessages);
+
   return {
     messages: [response],
   };
@@ -225,6 +230,7 @@ async function rewrite(
   console.log("---TRANSFORM QUERY---");
 
   const { messages } = state;
+  console.log(" messages", messages);
   const question = messages[0].content as string;
   const prompt = ChatPromptTemplate.fromTemplate(
     `Look at the input and try to reason about the underlying semantic intent / meaning. \n 
@@ -241,6 +247,7 @@ Formulate an improved question:`
     temperature: 0,
     streaming: true,
   });
+
   const response = await prompt.pipe(model).invoke({ question });
   return {
     messages: [response],
@@ -258,12 +265,13 @@ async function generate(
   console.log("---GENERATE---");
 
   const { messages } = state;
+  console.log(" messages", messages);
   const question = messages[0].content as string;
   // Extract the most recent ToolMessage
   const lastToolMessage = messages
     .slice()
     .reverse()
-    .find((msg) => msg._getType() === "tool");
+    .find((msg) => msg.getType() === "tool");
   if (!lastToolMessage) {
     throw new Error("No tool message found in the conversation history");
   }
@@ -327,27 +335,70 @@ workflow.addEdge("generate", END);
 workflow.addEdge("rewrite", "agent");
 
 // Compile
-const app = workflow.compile();
+// const app = workflow.compile();
 
-const inputs = {
-  messages: [new HumanMessage("勞基法第五條是在說什麼內容?")],
-};
-let finalState;
-for await (const output of await app.stream(inputs)) {
-  for (const [key, value] of Object.entries(output)) {
-    const lastMsg = output[key].messages[output[key].messages.length - 1];
-    console.log(`Output from node: '${key}'`);
-    console.dir(
-      {
-        type: lastMsg._getType(),
-        content: lastMsg.content,
-        tool_calls: lastMsg.tool_calls,
-      },
-      { depth: null }
-    );
-    console.log("---\n");
-    finalState = value;
+// const inputs = {
+//   messages: [new HumanMessage("勞基法第五條是在說什麼內容?")],
+// };
+// let finalState;
+// for await (const output of await app.stream(inputs)) {
+//   for (const [key, value] of Object.entries(output)) {
+//     const lastMsg = output[key].messages[output[key].messages.length - 1];
+//     console.log(`Output from node: '${key}'`);
+//     console.dir(
+//       {
+//         type: lastMsg._getType(),
+//         content: lastMsg.content,
+//         tool_calls: lastMsg.tool_calls,
+//       },
+//       { depth: null }
+//     );
+//     console.log("---\n");
+//     finalState = value;
+//   }
+// }
+
+// console.log(JSON.stringify(finalState, null, 2));
+
+const checkpointer = new MemorySaver();
+const app = workflow.compile({ checkpointer });
+
+// 建一個共用 thread id（你也可以在 UI 端為每個聊天室生成一個）
+const THREAD_ID = "chat-1";
+
+async function runTurn(userText: string) {
+  const input = { messages: [new HumanMessage(userText)] };
+
+  // ★ 一回合一回合送進去；.stream 會把各節點輸出逐步吐出來
+  for await (const output of await app.stream(input, {
+    configurable: { thread_id: THREAD_ID },
+  })) {
+    for (const [node, state] of Object.entries(output)) {
+      const last = state.messages?.[state.messages.length - 1];
+      const type = last?.getType();
+      const content =
+        typeof last?.content === "string"
+          ? last?.content
+          : JSON.stringify(last?.content);
+      console.log(`\n[node:${node}] (${type})\n${content}\n`);
+    }
   }
 }
 
-console.log(JSON.stringify(finalState, null, 2));
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  prompt: "> ",
+});
+console.log("已啟動互動模式，輸入問題按 Enter：");
+rl.prompt();
+rl.on("line", async (line) => {
+  const text = line.trim();
+  if (!text) return rl.prompt();
+  try {
+    await runTurn(text);
+  } catch (e) {
+    console.error("執行錯誤：", e);
+  }
+  rl.prompt();
+});
