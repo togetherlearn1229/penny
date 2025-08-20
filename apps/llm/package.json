@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "tsup --watch --onSuccess \"node dist/index.cjs\"",
+    "dev_try": "tsup --watch --onSuccess \"node dist/myServer.js\"",
     "build": "tsup",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/ --max-warnings 0",
@@ -20,11 +21,15 @@
     "@langchain/langgraph": "0.4.3",
     "@langchain/mcp-adapters": "0.6.0",
     "@langchain/openai": "0.6.4",
+    "@langchain/pinecone": "0.2.0",
+    "@langchain/textsplitters": "0.1.0",
     "@repo/logger": "*",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
+    "dotenv": "17.2.1",
     "express": "4.21.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "langchain": "0.3.30"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

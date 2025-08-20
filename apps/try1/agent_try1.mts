@@ -361,44 +361,44 @@ workflow.addEdge("rewrite", "agent");
 // console.log(JSON.stringify(finalState, null, 2));
 
 const checkpointer = new MemorySaver();
-const app = workflow.compile({ checkpointer });
+export const app = workflow.compile({ checkpointer });
 
-// 建一個共用 thread id（你也可以在 UI 端為每個聊天室生成一個）
-const THREAD_ID = "chat-1";
+// // 建一個共用 thread id（你也可以在 UI 端為每個聊天室生成一個）
+// const THREAD_ID = "chat-1";
 
-async function runTurn(userText: string) {
-  const input = { messages: [new HumanMessage(userText)] };
+// async function runTurn(userText: string) {
+//   const input = { messages: [new HumanMessage(userText)] };
 
-  // ★ 一回合一回合送進去；.stream 會把各節點輸出逐步吐出來
-  for await (const output of await app.stream(input, {
-    configurable: { thread_id: THREAD_ID },
-  })) {
-    for (const [node, state] of Object.entries(output)) {
-      const last = state.messages?.[state.messages.length - 1];
-      const type = last?.getType();
-      const content =
-        typeof last?.content === "string"
-          ? last?.content
-          : JSON.stringify(last?.content);
-      console.log(`\n[node:${node}] (${type})\n${content}\n`);
-    }
-  }
-}
+//   // ★ 一回合一回合送進去；.stream 會把各節點輸出逐步吐出來
+//   for await (const output of await app.stream(input, {
+//     configurable: { thread_id: THREAD_ID },
+//   })) {
+//     for (const [node, state] of Object.entries(output)) {
+//       const last = state.messages?.[state.messages.length - 1];
+//       const type = last?.getType();
+//       const content =
+//         typeof last?.content === "string"
+//           ? last?.content
+//           : JSON.stringify(last?.content);
+//       console.log(`\n[node:${node}] (${type})\n${content}\n`);
+//     }
+//   }
+// }
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  prompt: "> ",
-});
-console.log("已啟動互動模式，輸入問題按 Enter：");
-rl.prompt();
-rl.on("line", async (line) => {
-  const text = line.trim();
-  if (!text) return rl.prompt();
-  try {
-    await runTurn(text);
-  } catch (e) {
-    console.error("執行錯誤：", e);
-  }
-  rl.prompt();
-});
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+//   prompt: "> ",
+// });
+// console.log("已啟動互動模式，輸入問題按 Enter：");
+// rl.prompt();
+// rl.on("line", async (line) => {
+//   const text = line.trim();
+//   if (!text) return rl.prompt();
+//   try {
+//     await runTurn(text);
+//   } catch (e) {
+//     console.error("執行錯誤：", e);
+//   }
+//   rl.prompt();
+// });
