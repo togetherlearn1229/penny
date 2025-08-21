@@ -11,7 +11,6 @@ server.use(express.json());
 
 // SSE helper：把 JSON 事件用 SSE 格式送出
 function sse(res: express.Response, event: string, data: unknown) {
-  console.log("in see", event, data);
   res.write(`event: ${event}\n`);
   res.write(`data: ${JSON.stringify(data)}\n\n`);
 }
@@ -28,6 +27,7 @@ server.post("/api/agent/stream", async (req, res) => {
 
   try {
     const userText = String(req.body?.input ?? "");
+    const thread_id = String(req.body?.thread_id ?? "");
 
     // const input = {
     //   messages: [new HumanMessage({ content: userText })],
@@ -47,9 +47,10 @@ server.post("/api/agent/stream", async (req, res) => {
 
     for await (const event of graphApp.streamEvents(
       { messages: inputs },
-      { version: "v2", configurable: { thread_id: "THREAD_ID" } }
+      { version: "v2", configurable: { thread_id: thread_id } }
     )) {
       const kind = event.event;
+      console.log('kind: ', kind); 
       // console.log(`${kind}: ${event.name}`);
       if (kind === "on_chat_model_stream") {
         sse(res, kind, event);

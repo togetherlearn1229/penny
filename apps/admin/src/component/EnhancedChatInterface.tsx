@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { ChatInterface, Message } from "./ChatInterface";
 
+
+const thread_id = new Date().getTime().toString();
+console.log('thread_id: ', thread_id);
 async function streamMessage(
   input: string,
   onToken: (token: string) => void
@@ -8,7 +11,7 @@ async function streamMessage(
   const resp = await fetch("http://localhost:3001/api/agent/stream", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ input }),
+    body: JSON.stringify({ input, thread_id }),
   });
 
   if (!resp.body) {

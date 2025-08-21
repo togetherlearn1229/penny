@@ -135,7 +135,7 @@ async function gradeDocuments(
   const lastMessage = messages[messages.length - 1];
 
   const score = await chain.invoke({
-    question: messages[0].content as string,
+    question: messages[0].content as string,   // FIXME:
     context: lastMessage.content as string,
   });
   console.log("score", score);
@@ -231,7 +231,7 @@ async function rewrite(
 
   const { messages } = state;
   console.log(" messages", messages);
-  const question = messages[0].content as string;
+  const question = messages[0].content as string;   // FIXME:
   const prompt = ChatPromptTemplate.fromTemplate(
     `Look at the input and try to reason about the underlying semantic intent / meaning. \n 
 Here is the initial question:
