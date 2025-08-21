@@ -4,6 +4,7 @@ import cors from "cors";
 import { app as graphApp } from "./agent_try1";
 import { HumanMessage, BaseMessage } from "@langchain/core/messages";
 import { threadId } from "node:worker_threads";
+import { logger } from "./logger";
 
 const server = express();
 server.use(cors());
@@ -50,7 +51,8 @@ server.post("/api/agent/stream", async (req, res) => {
       { version: "v2", configurable: { thread_id: thread_id } }
     )) {
       const kind = event.event;
-      console.log('kind: ', kind); 
+      logger.log("kind:", kind);
+
       // console.log(`${kind}: ${event.name}`);
       if (kind === "on_chat_model_stream") {
         sse(res, kind, event);

@@ -17,6 +17,10 @@ import { pull } from "langchain/hub";
 import { z } from "zod";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import readline from "node:readline";
+import { logger } from "./logger";
+
+// 顯示日誌文件路徑
+console.log(`日誌文件位置: ${logger.getLogFilePath()}`);
 
 // 連上 PineconeStore 並將其作為 retriever
 const embeddings = new OpenAIEmbeddings({
@@ -49,6 +53,24 @@ const GraphState = Annotation.Root({
   }),
 });
 
+/**
+ * 獲取最新的人類訊息內容
+ * @param messages - 訊息數組
+ * @returns 最新的人類訊息內容
+ */
+function getLatestHumanMessage(messages: BaseMessage[]): string {
+  // 從後往前找最新的 HumanMessage
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const message = messages[i];
+    if (message.getType() === "human") {
+      return message.content as string;
+    }
+  }
+  // 如果找不到 HumanMessage，回退到第一個訊息
+  logger.warn("未找到 HumanMessage，回退到使用第一個訊息");
+  return messages[0]?.content as string || "";
+}
+
 const toolNode = new ToolNode<typeof GraphState.State>(tools);
 
 // // 第二次提問（有上下文）
@@ -70,8 +92,10 @@ const toolNode = new ToolNode<typeof GraphState.State>(tools);
  */
 function shouldRetrieve(state: typeof GraphState.State): string {
   const { messages } = state;
-  console.log("---DECIDE TO RETRIEVE---");
-  console.log(" messages", messages);
+  logger.decision("DECIDE TO RETRIEVE", "檢查是否需要檢索", {
+    messagesCount: messages.length,
+    messages,
+  });
   const lastMessage = messages[messages.length - 1];
 
   if (
@@ -79,7 +103,7 @@ function shouldRetrieve(state: typeof GraphState.State): string {
     Array.isArray(lastMessage.tool_calls) &&
     lastMessage.tool_calls.length
   ) {
-    console.log("---DECISION: RETRIEVE---");
+    logger.decision("DECISION", "RETRIEVE", "需要檢索更多信息");
     return "retrieve";
   }
   // If there are no tool calls then we finish.
@@ -98,10 +122,8 @@ function shouldRetrieve(state: typeof GraphState.State): string {
 async function gradeDocuments(
   state: typeof GraphState.State
 ): Promise<Partial<typeof GraphState.State>> {
-  console.log("---GET RELEVANCE---");
-
   const { messages } = state;
-  console.log(" messages", messages);
+  logger.nodeExecution("GET RELEVANCE 開始評估文檔相關性", messages);
   const tool = {
     name: "give_relevance_score",
     description: "Give a relevance score to the retrieved documents.",
@@ -134,11 +156,14 @@ async function gradeDocuments(
 
   const lastMessage = messages[messages.length - 1];
 
+  const latestQuestion = getLatestHumanMessage(messages);
+  logger.log("gradeDocuments 使用的問題:", latestQuestion);
+  
   const score = await chain.invoke({
-    question: messages[0].content as string,   // FIXME:
+    question: latestQuestion,
     context: lastMessage.content as string,
   });
-  console.log("score", score);
+  logger.log(`相關性評分:`, { score, messages });
   return {
     messages: [score],
   };
@@ -151,10 +176,8 @@ async function gradeDocuments(
  * @returns {string} - A directive to either "yes" or "no" based on the relevance of the documents.
  */
 function checkRelevance(state: typeof GraphState.State): string {
-  console.log("---CHECK RELEVANCE---");
-
   const { messages } = state;
-  console.log(" messages", messages);
+  logger.nodeExecution("CHECK RELEVANCE 檢查文檔相關性", messages);
   const lastMessage = messages[messages.length - 1];
   if (!("tool_calls" in lastMessage)) {
     throw new Error(
@@ -167,11 +190,11 @@ function checkRelevance(state: typeof GraphState.State): string {
   }
 
   if (toolCalls[0].args.binaryScore === "yes") {
-    console.log("---DECISION: DOCS RELEVANT---");
+    logger.decision("RELEVANCE", "DOCS RELEVANT", "文檔相關，繼續生成回答");
     return "yes";
   }
 
-  console.log("---DECISION: DOCS NOT RELEVANT---");
+  logger.decision("RELEVANCE", "DOCS NOT RELEVANT", "文檔不相關，需要重寫查詢");
   return "no";
 }
 
@@ -187,10 +210,8 @@ function checkRelevance(state: typeof GraphState.State): string {
 async function agent(
   state: typeof GraphState.State
 ): Promise<Partial<typeof GraphState.State>> {
-  console.log("---CALL AGENT---");
-
   const { messages } = state;
-  console.log(" messages", messages);
+  logger.nodeExecution("CALL AGENT 調用主要代理", messages);
   // Find the AIMessage which contains the `give_relevance_score` tool call,
   // and remove it if it exists. This is because the agent does not need to know
   // the relevance score.
@@ -227,11 +248,10 @@ async function agent(
 async function rewrite(
   state: typeof GraphState.State
 ): Promise<Partial<typeof GraphState.State>> {
-  console.log("---TRANSFORM QUERY---");
-
   const { messages } = state;
-  console.log(" messages", messages);
-  const question = messages[0].content as string;   // FIXME:
+  logger.nodeExecution("TRANSFORM QUERY 重寫查詢以改善檢索", messages);
+  const question = getLatestHumanMessage(messages);
+  logger.log("rewrite 使用的問題:", question);
   const prompt = ChatPromptTemplate.fromTemplate(
     `Look at the input and try to reason about the underlying semantic intent / meaning. \n 
 Here is the initial question:
@@ -262,11 +282,10 @@ Formulate an improved question:`
 async function generate(
   state: typeof GraphState.State
 ): Promise<Partial<typeof GraphState.State>> {
-  console.log("---GENERATE---");
-
   const { messages } = state;
-  console.log(" messages", messages);
-  const question = messages[0].content as string;
+  logger.nodeExecution("GENERATE 生成最終回答", messages);
+  const question = getLatestHumanMessage(messages);
+  logger.log("generate 使用的問題:", question);
   // Extract the most recent ToolMessage
   const lastToolMessage = messages
     .slice()
@@ -344,16 +363,11 @@ workflow.addEdge("rewrite", "agent");
 // for await (const output of await app.stream(inputs)) {
 //   for (const [key, value] of Object.entries(output)) {
 //     const lastMsg = output[key].messages[output[key].messages.length - 1];
-//     console.log(`Output from node: '${key}'`);
-//     console.dir(
-//       {
-//         type: lastMsg._getType(),
-//         content: lastMsg.content,
-//         tool_calls: lastMsg.tool_calls,
-//       },
-//       { depth: null }
-//     );
-//     console.log("---\n");
+//     logger.nodeExecution(key, {
+//       type: lastMsg._getType(),
+//       content: lastMsg.content,
+//       tool_calls: lastMsg.tool_calls,
+//     });
 //     finalState = value;
 //   }
 // }
@@ -370,7 +384,7 @@ export const app = workflow.compile({ checkpointer });
 //   { version: "v2", configurable: { thread_id: "THREAD_ID" } }
 // )) {
 //   const kind = event.event;
-//   console.log(`${kind}: ${event.name}`);
+//   logger.log(`${kind}: ${event.name}`);
 // }
 
 // // 建一個共用 thread id（你也可以在 UI 端為每個聊天室生成一個）
@@ -390,7 +404,7 @@ export const app = workflow.compile({ checkpointer });
 //         typeof last?.content === "string"
 //           ? last?.content
 //           : JSON.stringify(last?.content);
-//       console.log(`\n[node:${node}] (${type})\n${content}\n`);
+//       logger.nodeExecution(node, { type, content });
 //     }
 //   }
 // }
@@ -400,7 +414,7 @@ export const app = workflow.compile({ checkpointer });
 //   output: process.stdout,
 //   prompt: "> ",
 // });
-// console.log("已啟動互動模式，輸入問題按 Enter：");
+// logger.log("已啟動互動模式，輸入問題按 Enter：");
 // rl.prompt();
 // rl.on("line", async (line) => {
 //   const text = line.trim();
@@ -408,7 +422,7 @@ export const app = workflow.compile({ checkpointer });
 //   try {
 //     await runTurn(text);
 //   } catch (e) {
-//     console.error("執行錯誤：", e);
+//     logger.error("執行錯誤：", e);
 //   }
 //   rl.prompt();
 // });
