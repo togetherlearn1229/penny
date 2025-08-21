@@ -2,6 +2,7 @@ import "./styles.css";
 import { CounterButton } from "@repo/ui/counter-button";
 import { Link } from "@repo/ui/link";
 import { useState } from "react";
+import { EnhancedChatInterface } from "../component";
 
 async function ask(input: string, onToken: (t: string) => void, setText) {
   const resp = await fetch("http://localhost:3001/api/agent/stream", {
@@ -16,12 +17,12 @@ async function ask(input: string, onToken: (t: string) => void, setText) {
   while (true) {
     const { value, done } = await reader.read();
 
-    console.log("value", value);
+    // console.log("value", value);
 
     if (done) break;
     buf += td.decode(value, { stream: true });
-    console.log("td.decode", buf);
     const chunks = buf.split("\n\n"); // SSE frame
+
     buf = chunks.pop() ?? "";
     for (const c of chunks) {
       const event = c
@@ -35,24 +36,27 @@ async function ask(input: string, onToken: (t: string) => void, setText) {
         ?.slice(5);
       if (!dataL) continue;
       const data = JSON.parse(dataL);
-      console.log("Received event:", event, data);
+      // console.log("Received event:", event, data);
+      console.log("data", data);
+      setText((t: string) => (t += data.data.chunk.kwargs.content));
 
       if (event === "token" && data.chunk) {
         onToken(data.chunk);
       } else if (event === "error") {
-        console.error("Backend error:", data);
+        // console.error("Backend error:", data);
         setText(`Error: ${data.message}`);
       }
     }
-    console.log("buf", buf);
+    // console.log("buf", buf);
   }
 }
 
 function App() {
-  const [text, setText] = useState("");
+  // const [text, setText] = useState<string>("");
   return (
     <div className="container">
-      <h1 className="title">
+      <EnhancedChatInterface />
+      {/* <h1 className="title">
         Admin <br />
         <span>Kitchen Sink</span>
       </h1>
@@ -65,8 +69,8 @@ function App() {
         {" & "}
         <Link href="https://vitejs.dev/" newTab>
           Vite
-        </Link>
-        <button
+        </Link> */}
+      {/* <button
           type="button"
           onClick={() => {
             ask("請問勞基法第11條的內容?", () => {}, setText);
@@ -74,7 +78,8 @@ function App() {
         >
           try
         </button>
-      </p>
+        <p>{text}</p> */}
+      {/* </p> */}
     </div>
   );
 }

@@ -27,7 +27,7 @@ server.post("/api/agent/stream", async (req, res) => {
   req.on("close", () => controller.abort());
 
   try {
-    // const userText = String(req.body?.input ?? "");
+    const userText = String(req.body?.input ?? "");
 
     // const input = {
     //   messages: [new HumanMessage({ content: userText })],
@@ -43,9 +43,7 @@ server.post("/api/agent/stream", async (req, res) => {
 
     // console.log("output", output);
 
-    const inputs = [
-      new HumanMessage({ content: "勞基法第五條是在說什麼內容?" }),
-    ];
+    const inputs = [new HumanMessage({ content: userText })];
 
     for await (const event of graphApp.streamEvents(
       { messages: inputs },
@@ -53,7 +51,9 @@ server.post("/api/agent/stream", async (req, res) => {
     )) {
       const kind = event.event;
       // console.log(`${kind}: ${event.name}`);
-      sse(res, kind, event);
+      if (kind === "on_chat_model_stream") {
+        sse(res, kind, event);
+      }
     }
 
     // // 串 LangGraph 事件（v2 事件模型最穩）
