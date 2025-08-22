@@ -54,7 +54,12 @@ server.post("/api/agent/stream", async (req, res) => {
       logger.log("kind:", kind);
 
       // console.log(`${kind}: ${event.name}`);
-      if (kind === "on_chat_model_stream") {
+      if (
+        (kind === "on_chat_model_stream" &&
+          event.metadata.langgraph_node === "generate") ||
+        event.metadata.langgraph_node === "agent"
+      ) {
+        console.log("event:", event);
         sse(res, kind, event);
       }
     }

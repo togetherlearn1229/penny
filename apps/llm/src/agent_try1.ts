@@ -68,7 +68,7 @@ function getLatestHumanMessage(messages: BaseMessage[]): string {
   }
   // 如果找不到 HumanMessage，回退到第一個訊息
   logger.warn("未找到 HumanMessage，回退到使用第一個訊息");
-  return messages[0]?.content as string || "";
+  return (messages[0]?.content as string) || "";
 }
 
 const toolNode = new ToolNode<typeof GraphState.State>(tools);
@@ -158,7 +158,7 @@ async function gradeDocuments(
 
   const latestQuestion = getLatestHumanMessage(messages);
   logger.log("gradeDocuments 使用的問題:", latestQuestion);
-  
+
   const score = await chain.invoke({
     question: latestQuestion,
     context: lastMessage.content as string,
