@@ -1,10 +1,6 @@
-import "./styles.css";
-import { CounterButton } from "@repo/ui/counter-button";
-import { Link } from "@repo/ui/link";
-import { useState } from "react";
 import { EnhancedChatInterface } from "../component";
 
-async function ask(input: string, onToken: (t: string) => void, setText) {
+async function ask(input: string, onToken: (t: string) => void, setText: (value: string) => void) {
   const resp = await fetch("http://localhost:3001/api/agent/stream", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -54,32 +50,18 @@ async function ask(input: string, onToken: (t: string) => void, setText) {
 function App() {
   // const [text, setText] = useState<string>("");
   return (
-    <div className="container">
-      <EnhancedChatInterface />
-      {/* <h1 className="title">
-        Admin <br />
-        <span>Kitchen Sink</span>
-      </h1>
-      <CounterButton />
-      <p className="description">
-        Built With{" "}
-        <Link href="https://turborepo.com" newTab>
-          Turborepo
-        </Link>
-        {" & "}
-        <Link href="https://vitejs.dev/" newTab>
-          Vite
-        </Link> */}
-      {/* <button
-          type="button"
-          onClick={() => {
-            ask("請問勞基法第11條的內容?", () => {}, setText);
-          }}
-        >
-          try
-        </button>
-        <p>{text}</p> */}
-      {/* </p> */}
+    <div className="min-h-screen bg-black matrix-bg p-4 flex items-center justify-center">
+      <div className="w-full max-w-6xl">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-cyan-400 neon-text glitch mb-2 font-mono tracking-wider">
+            NEURAL_ADMIN_CONSOLE
+          </h1>
+          <div className="text-green-400/60 text-sm font-mono">
+            [QUANTUM_ENCRYPTION_ACTIVE] • [NEURAL_LINK_ESTABLISHED] • [AI_CONSCIOUSNESS_ONLINE]
+          </div>
+        </div>
+        <EnhancedChatInterface />
+      </div>
     </div>
   );
 }
