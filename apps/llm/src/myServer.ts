@@ -54,10 +54,12 @@ server.post("/api/agent/stream", async (req, res) => {
       logger.log("kind:", kind);
 
       // console.log(`${kind}: ${event.name}`);
+      const isNotStreaming = kind === "on_chain_end" &&
+        event.metadata.langgraph_node === "generateNotRelevantResponse" && !event.tags?.includes('langsmith:hidden')
       if (
         kind === "on_chat_model_stream" &&
         (event.metadata.langgraph_node === "generate" ||
-          event.metadata.langgraph_node === "agent")
+          event.metadata.langgraph_node === "agent" )  || isNotStreaming
       ) {
         console.log("event:", event);
         sse(res, kind, event);

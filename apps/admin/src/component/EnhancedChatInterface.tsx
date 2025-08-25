@@ -49,8 +49,10 @@ async function streamMessage(
       try {
         const data = JSON.parse(dataL);
         
-        if (event === "token" || data.data?.chunk?.kwargs?.content) {
+        if (event === 'on_chat_model_stream') {
           onToken(data.data.chunk.kwargs.content);
+        } else if (data.metadata.langgraph_node === "generateNotRelevantResponse") {
+          onToken(data.data.output.messages[0].kwargs.content);
         } else if (event === "error") {
           throw new Error(data.message || "Backend error");
         }

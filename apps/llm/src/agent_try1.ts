@@ -201,6 +201,138 @@ function checkRelevance(state: typeof GraphState.State): string {
 // Nodes
 
 /**
+ * 檢查用戶問題是否與勞基法相關
+ * @param {typeof GraphState.State} state - The current state of the agent, including all messages.
+ * @returns {Promise<Partial<typeof GraphState.State>>} - The updated state with the relevance check result
+ */
+async function checkLaborLawRelevance(
+  state: typeof GraphState.State
+): Promise<Partial<typeof GraphState.State>> {
+  const { messages } = state;
+  logger.nodeExecution("CHECK LABOR LAW RELEVANCE 檢查勞基法相關性", messages);
+
+  const latestQuestion = getLatestHumanMessage(messages);
+  logger.log("checkLaborLawRelevance 使用的問題:", latestQuestion);
+
+  const prompt = ChatPromptTemplate.fromTemplate(
+    `你是一個專門判斷問題是否與勞基法相關的專家。
+    
+    以下是用戶的問題:
+    {question}
+    
+    請判斷這個問題是否與以下勞基法相關主題有關：
+    - 工作時間與休息時間
+    - 加班費與薪資
+    - 請假制度（病假、特休、產假等）
+    - 勞動契約與職場權益
+    - 職場安全與健康
+    - 解僱與離職
+    - 其他勞工權益相關議題
+    
+    請嚴格按照以下格式回答（不要添加其他內容）：
+    RELEVANT: [yes/no]
+    REASON: [你的判斷理由]
+    
+    如果問題與勞基法相關，回答 yes；如果完全不相關（如：天氣、美食、娛樂、技術問題等），回答 no。`
+  );
+
+  const model = new ChatOpenAI({
+    model: "gpt-4o",
+    temperature: 0,
+  });
+
+  const chain = prompt.pipe(model);
+  const result = await chain.invoke({ question: latestQuestion });
+
+  logger.log("勞基法相關性檢查結果:", result);
+
+  return {
+    messages: [result],
+  };
+}
+
+/**
+ * 檢查勞基法相關性檢查的結果
+ * @param {typeof GraphState.State} state - The current state of the agent
+ * @returns {string} - 返回 "relevant" 或 "not_relevant"
+ */
+function decideLaborLawRelevance(state: typeof GraphState.State): string {
+  const { messages } = state;
+  logger.nodeExecution("DECIDE LABOR LAW RELEVANCE 決定勞基法相關性", messages);
+
+  const lastMessage = messages[messages.length - 1];
+  const content = lastMessage.content as string;
+
+  logger.log("勞基法相關性檢查的原始回應:", content);
+
+  // 解析回應格式: RELEVANT: [yes/no] REASON: [理由]
+  const relevantMatch = content.match(/RELEVANT:\s*(yes|no)/i);
+  const reasonMatch = content.match(/REASON:\s*([\s\S]+)/i); // 使用 [\s\S] 匹配包括換行符的所有字符
+
+  logger.log("解析結果:", {
+    relevantMatch: relevantMatch?.[1],
+    reasonMatch: reasonMatch?.[1]
+  });
+
+  if (!relevantMatch) {
+    logger.error("無法解析勞基法相關性檢查結果，原始內容:", content);
+    // 如果無法解析，嘗試使用關鍵字判斷
+    const lowerContent = content.toLowerCase();
+    if (lowerContent.includes("yes") || lowerContent.includes("相關")) {
+      logger.decision("LABOR LAW RELEVANCE", "RELEVANT", "關鍵字判斷：相關");
+      return "relevant";
+    } else if (lowerContent.includes("no") || lowerContent.includes("不相關") || lowerContent.includes("無關")) {
+      logger.decision("LABOR LAW RELEVANCE", "NOT_RELEVANT", "關鍵字判斷：不相關");
+      return "not_relevant";
+    }
+    // 最後預設為相關，避免意外阻擋用戶
+    logger.decision("LABOR LAW RELEVANCE", "RELEVANT", "無法判斷，預設為相關");
+    return "relevant";
+  }
+
+  const isRelevant = relevantMatch[1].toLowerCase() === "yes";
+  const reason = reasonMatch ? reasonMatch[1].trim() : "無法獲取判斷理由";
+
+  if (isRelevant) {
+    logger.decision("LABOR LAW RELEVANCE", "RELEVANT", `問題與勞基法相關: ${reason}`);
+    return "relevant";
+  } else {
+    logger.decision("LABOR LAW RELEVANCE", "NOT_RELEVANT", `問題與勞基法不相關: ${reason}`);
+    return "not_relevant";
+  }
+}
+
+/**
+ * 生成勞基法不相關的回應
+ * @param {typeof GraphState.State} state - The current state of the agent
+ * @returns {Promise<Partial<typeof GraphState.State>>} - 包含拒絕回應的更新狀態
+ */
+async function generateNotRelevantResponse(
+  state: typeof GraphState.State
+): Promise<Partial<typeof GraphState.State>> {
+  const { messages } = state;
+  logger.nodeExecution("GENERATE NOT RELEVANT RESPONSE 生成非相關回應", messages);
+
+  console.log("===== 正在生成非相關回應 =====");
+
+  const res = new AIMessage({
+    content: `
+    我可以幫助您解答以下勞基法相關問題：
+       • 工作時間與休息時間規定
+       • 加班費計算與薪資問題
+       • 各種請假制度（病假、特休、產假等）
+       • 勞動契約與職場權益
+       • 職場安全與健康
+       • 解僱與離職相關規定
+       • 其他勞工權益議題`,
+  })
+
+  return {
+    messages: [res],
+  };
+}
+
+/**
  * Invokes the agent model to generate a response based on the current state.
  * This function calls the agent model to generate a response to the current conversation state.
  * The response is added to the state's messages.
@@ -320,14 +452,32 @@ async function generate(
 // Define the graph
 const workflow = new StateGraph(GraphState)
   // Define the nodes which we'll cycle between.
+  .addNode("checkLaborLawRelevance", checkLaborLawRelevance)
+  .addNode("generateNotRelevantResponse", generateNotRelevantResponse)
   .addNode("agent", agent)
   .addNode("retrieve", toolNode)
   .addNode("gradeDocuments", gradeDocuments)
   .addNode("rewrite", rewrite)
   .addNode("generate", generate);
 
-// Call agent node to decide to retrieve or not
-workflow.addEdge(START, "agent");
+// 從 START 開始先檢查勞基法相關性
+workflow.addEdge(START, "checkLaborLawRelevance");
+
+// 根據勞基法相關性決定後續流程
+workflow.addConditionalEdges(
+  "checkLaborLawRelevance",
+  // 評估問題是否與勞基法相關
+  decideLaborLawRelevance,
+  {
+    // 如果相關，繼續到 agent 節點
+    relevant: "agent",
+    // 如果不相關，生成拒絕回應並結束
+    not_relevant: "generateNotRelevantResponse",
+  }
+);
+
+// 不相關的問題直接結束
+workflow.addEdge("generateNotRelevantResponse", END);
 
 // Decide whether to retrieve
 workflow.addConditionalEdges(
