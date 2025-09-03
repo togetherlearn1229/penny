@@ -28,8 +28,8 @@
     "cors": "^2.8.5",
     "dotenv": "17.2.1",
     "express": "4.21.2",
-    "morgan": "^1.10.0",
-    "langchain": "0.3.30"
+    "langchain": "0.3.30",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

@@ -5,6 +5,7 @@ import { app as graphApp } from "./agent_try1";
 import { HumanMessage, BaseMessage } from "@langchain/core/messages";
 import { threadId } from "node:worker_threads";
 import { logger } from "./logger";
+import { Command } from "@langchain/langgraph";
 
 const server = express();
 server.use(cors());
@@ -29,6 +30,7 @@ server.post("/api/agent/stream", async (req, res) => {
   try {
     const userText = String(req.body?.input ?? "");
     const thread_id = String(req.body?.thread_id ?? "");
+    const isInterrupt = Boolean(req.body?.isInterrupt ?? false);
 
     // const input = {
     //   messages: [new HumanMessage({ content: userText })],
@@ -47,67 +49,36 @@ server.post("/api/agent/stream", async (req, res) => {
     const inputs = [new HumanMessage({ content: userText })];
 
     for await (const event of graphApp.streamEvents(
-      { messages: inputs },
-      { version: "v2", configurable: { thread_id: thread_id } }
+      isInterrupt ? new Command({ resume: userText }) : { messages: inputs },
+      {
+        version: "v2",
+        configurable: { thread_id: thread_id },
+        recursionLimit: 2,
+      }
     )) {
       const kind = event.event;
-      logger.log("kind:", kind);
+      // logger.log(`kind:${event}`, event);
+
+      const isOnChainStream =
+        kind === "on_chain_stream" && "__interrupt__" in event.data.chunk;
 
       // console.log(`${kind}: ${event.name}`);
-      const isNotStreaming = kind === "on_chain_end" &&
-        event.metadata.langgraph_node === "generateNotRelevantResponse" && !event.tags?.includes('langsmith:hidden')
+      const isNotStreaming =
+        kind === "on_chain_end" &&
+        event.metadata.langgraph_node === "generateNotRelevantResponse" &&
+        !event.tags?.includes("langsmith:hidden");
+
       if (
-        kind === "on_chat_model_stream" &&
-        (event.metadata.langgraph_node === "generate" ||
-          event.metadata.langgraph_node === "agent" )  || isNotStreaming
+        (kind === "on_chat_model_stream" &&
+          (event.metadata.langgraph_node === "generate" ||
+            event.metadata.langgraph_node === "agent")) ||
+        isNotStreaming ||
+        isOnChainStream
       ) {
         console.log("event:", event);
         sse(res, kind, event);
       }
     }
-
-    // // 串 LangGraph 事件（v2 事件模型最穩）
-    // for await (const ev of graphApp.streamEvents(input, {
-    //   version: "v2",
-    //   signal: controller.signal,
-    //   configurable: { thread_id: "test" },
-    // })) {
-    //   // for (const [node, state] of Object.entries(output)) {
-    //   //   const last = state.messages?.[state.messages.length - 1];
-    //   //   const type = last?.getType();
-    //   //   const content =
-    //   //     typeof last?.content === "string"
-    //   //       ? last?.content
-    //   //       : JSON.stringify(last?.content);
-    //   //   console.log(`\n[node:${node}] (${type})\n${content}\n`);
-    //   //   sse(res, `\n[node:${node}] (${type})`, `\n${content}\n`);
-    //   // }
-
-    //   // console.log("ev", ev);
-    //   // console.log("ev.event", ev.event);
-
-    //   // // 你可以：原封不動丟所有事件
-    //   sse(res, ev.event, ev);
-
-    //   // // 或是只挑「對前端有用」的事件精簡後丟出
-    //   // // 1) 新增的訊息（多半是 AI/工具/系統訊息）
-    //   // if (ev.event === "messages/created") {
-    //   //   sse(res, "message", ev.data);
-    //   // }
-
-    //   // // 2) token 級別的模型輸出（LangChain LLM 流）
-    //   // if (ev.event === "on_chat_model_stream") {
-    //   //   // ev.data.chunk?.content 可能是一段 token/文字塊
-    //   //   sse(res, "token", { chunk: ev.data?.chunk?.content ?? "" });
-    //   // }
-
-    //   // // 3) 工具呼叫與結果
-    //   // if (ev.event === "tool/start") sse(res, "tool_start", ev.data);
-    //   // if (ev.event === "tool/end") sse(res, "tool_end", ev.data);
-
-    //   // // 4) 結束訊號（可選）
-    //   // if (ev.event === "end") sse(res, "end", {});
-    // }
   } catch (err: any) {
     console.log("err", err);
     sse(res, "error", { message: err?.message ?? String(err) });

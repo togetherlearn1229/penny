@@ -7,6 +7,8 @@ import {
   END,
   StateGraph,
   START,
+  interrupt,
+  Command,
 } from "@langchain/langgraph";
 import { HumanMessage, BaseMessage, AIMessage } from "@langchain/core/messages";
 import { createReactAgent, ToolNode } from "@langchain/langgraph/prebuilt";
@@ -18,6 +20,8 @@ import { z } from "zod";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import readline from "node:readline";
 import { logger } from "./logger";
+import fs from "node:fs";
+import { InMemoryStore } from "@langchain/langgraph";
 
 // 顯示日誌文件路徑
 console.log(`日誌文件位置: ${logger.getLogFilePath()}`);
@@ -48,6 +52,10 @@ const tools = [tool];
 
 const GraphState = Annotation.Root({
   messages: Annotation<BaseMessage[]>({
+    reducer: (x, y) => x.concat(y),
+    default: () => [],
+  }),
+  userFeedback: Annotation<string[]>({
     reducer: (x, y) => x.concat(y),
     default: () => [],
   }),
@@ -271,7 +279,7 @@ function decideLaborLawRelevance(state: typeof GraphState.State): string {
 
   logger.log("解析結果:", {
     relevantMatch: relevantMatch?.[1],
-    reasonMatch: reasonMatch?.[1]
+    reasonMatch: reasonMatch?.[1],
   });
 
   if (!relevantMatch) {
@@ -281,8 +289,16 @@ function decideLaborLawRelevance(state: typeof GraphState.State): string {
     if (lowerContent.includes("yes") || lowerContent.includes("相關")) {
       logger.decision("LABOR LAW RELEVANCE", "RELEVANT", "關鍵字判斷：相關");
       return "relevant";
-    } else if (lowerContent.includes("no") || lowerContent.includes("不相關") || lowerContent.includes("無關")) {
-      logger.decision("LABOR LAW RELEVANCE", "NOT_RELEVANT", "關鍵字判斷：不相關");
+    } else if (
+      lowerContent.includes("no") ||
+      lowerContent.includes("不相關") ||
+      lowerContent.includes("無關")
+    ) {
+      logger.decision(
+        "LABOR LAW RELEVANCE",
+        "NOT_RELEVANT",
+        "關鍵字判斷：不相關"
+      );
       return "not_relevant";
     }
     // 最後預設為相關，避免意外阻擋用戶
@@ -294,10 +310,18 @@ function decideLaborLawRelevance(state: typeof GraphState.State): string {
   const reason = reasonMatch ? reasonMatch[1].trim() : "無法獲取判斷理由";
 
   if (isRelevant) {
-    logger.decision("LABOR LAW RELEVANCE", "RELEVANT", `問題與勞基法相關: ${reason}`);
+    logger.decision(
+      "LABOR LAW RELEVANCE",
+      "RELEVANT",
+      `問題與勞基法相關: ${reason}`
+    );
     return "relevant";
   } else {
-    logger.decision("LABOR LAW RELEVANCE", "NOT_RELEVANT", `問題與勞基法不相關: ${reason}`);
+    logger.decision(
+      "LABOR LAW RELEVANCE",
+      "NOT_RELEVANT",
+      `問題與勞基法不相關: ${reason}`
+    );
     return "not_relevant";
   }
 }
@@ -311,7 +335,10 @@ async function generateNotRelevantResponse(
   state: typeof GraphState.State
 ): Promise<Partial<typeof GraphState.State>> {
   const { messages } = state;
-  logger.nodeExecution("GENERATE NOT RELEVANT RESPONSE 生成非相關回應", messages);
+  logger.nodeExecution(
+    "GENERATE NOT RELEVANT RESPONSE 生成非相關回應",
+    messages
+  );
 
   console.log("===== 正在生成非相關回應 =====");
 
@@ -325,7 +352,7 @@ async function generateNotRelevantResponse(
        • 職場安全與健康
        • 解僱與離職相關規定
        • 其他勞工權益議題`,
-  })
+  });
 
   return {
     messages: [res],
@@ -371,6 +398,21 @@ async function agent(
     messages: [response],
   };
 }
+
+const humanInterrupt = (state: typeof GraphState.State) => {
+  logger.nodeExecution("HUMAN INTERRUPT 等待使用者輸入", state.messages);
+  const feedback: string = interrupt({
+    message: "請選擇是否接續執行",
+    options: ["yes", "no"],
+  });
+  if (feedback === "yes") {
+    return new Command({ goto: "checkLaborLawRelevance" });
+  } else {
+    return new Command({ goto: END });
+  }
+
+  return { userFeedback: [feedback] };
+};
 
 /**
  * Transform the query to produce a better question.
@@ -452,6 +494,7 @@ async function generate(
 // Define the graph
 const workflow = new StateGraph(GraphState)
   // Define the nodes which we'll cycle between.
+  .addNode("humanInterrupt", humanInterrupt)
   .addNode("checkLaborLawRelevance", checkLaborLawRelevance)
   .addNode("generateNotRelevantResponse", generateNotRelevantResponse)
   .addNode("agent", agent)
@@ -461,7 +504,10 @@ const workflow = new StateGraph(GraphState)
   .addNode("generate", generate);
 
 // 從 START 開始先檢查勞基法相關性
-workflow.addEdge(START, "checkLaborLawRelevance");
+workflow.addEdge(START, "humanInterrupt");
+
+// 開始先檢查勞基法相關性 有這行上面command 流程會失效以這裡優先跑graph
+// workflow.addEdge("humanInterrupt", "checkLaborLawRelevance");
 
 // 根據勞基法相關性決定後續流程
 workflow.addConditionalEdges(
@@ -527,6 +573,50 @@ workflow.addEdge("rewrite", "agent");
 const checkpointer = new MemorySaver();
 export const app = workflow.compile({ checkpointer });
 
+/** drawMermaidPng 好像有 bug 輸出的 png 多了很多條不知何存在的虛線 */
+const getGraphPng = async () => {
+  try {
+    const drawableGraphGraphState = await app.getGraphAsync();
+    const graphStateImage = await drawableGraphGraphState.drawMermaidPng({});
+    const m = await drawableGraphGraphState.drawMermaid();
+    console.log(m);
+    const graphStateArrayBuffer = await graphStateImage.arrayBuffer();
+
+    fs.writeFile(
+      "graph.png",
+      new Uint8Array(graphStateArrayBuffer),
+      function (err) {
+        if (err) console.log(err);
+        else console.log("Write operation complete.");
+      }
+    );
+  } catch (error) {
+    console.error("Failed to display graph:", error);
+  }
+};
+
+// getGraphPng();
+const useGetGraphPng = async () => {
+  const config = { configurable: { thread_id: "1" } };
+  await app.invoke(
+    {
+      messages: [new HumanMessage({ content: "勞基法第五條是在說什麼內容?" })],
+    },
+    config
+  );
+  const state = await app.getState(config);
+  console.log("--------------------------");
+  logger.warn("state", state);
+
+  const history = await app.getStateHistory(config);
+  console.log("--------------------------");
+  for await (const historyState of history) {
+    logger.warn("history item", historyState);
+  }
+};
+
+// useGetGraphPng();
+
 // const inputs = [new HumanMessage({ content: "勞基法第五條是在說什麼內容?" })];
 
 // for await (const event of app.streamEvents(
@@ -535,7 +625,7 @@ export const app = workflow.compile({ checkpointer });
 // )) {
 //   const kind = event.event;
 //   logger.log(`${kind}: ${event.name}`);
-// }
+// }apps\llm\src\agent_try1.ts
 
 // // 建一個共用 thread id（你也可以在 UI 端為每個聊天室生成一個）
 // const THREAD_ID = "chat-1";

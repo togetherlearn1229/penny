@@ -1,21 +1,28 @@
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { ChatInterface, Message } from "./ChatInterface";
 
-
 const thread_id = new Date().getTime().toString();
-console.log('thread_id: ', thread_id);
+console.log("thread_id: ", thread_id);
 async function streamMessage(
   input: string,
-  onToken: (token: string) => void
+  onToken: (token: string) => void,
+  {
+    isInterrupt,
+    setIsInterrupt,
+  }: { isInterrupt: boolean; setIsInterrupt: Dispatch<SetStateAction<boolean>> }
 ): Promise<void> {
   const resp = await fetch("http://localhost:3001/api/agent/stream", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ input, thread_id }),
+    body: JSON.stringify({ input, thread_id, isInterrupt }),
   });
 
   if (!resp.body) {
     throw new Error("No response body");
+  }
+
+  if (isInterrupt) {
+    setIsInterrupt(false);
   }
 
   const reader = resp.body.getReader();
@@ -26,33 +33,38 @@ async function streamMessage(
     const { value, done } = await reader.read();
 
     if (done) break;
-    
+
     buf += td.decode(value, { stream: true });
     const chunks = buf.split("\n\n");
 
     buf = chunks.pop() ?? "";
-    
+
     for (const c of chunks) {
       const event = c
         .split("\n")
         .find((l) => l.startsWith("event:"))
         ?.slice(6)
         .trim();
-        
+
       const dataL = c
         .split("\n")
         .find((l) => l.startsWith("data:"))
         ?.slice(5);
-        
+
       if (!dataL) continue;
-      
+
       try {
         const data = JSON.parse(dataL);
-        
-        if (event === 'on_chat_model_stream') {
+
+        if (event === "on_chat_model_stream") {
           onToken(data.data.chunk.kwargs.content);
-        } else if (data.metadata.langgraph_node === "generateNotRelevantResponse") {
+        } else if (
+          data.metadata.langgraph_node === "generateNotRelevantResponse"
+        ) {
           onToken(data.data.output.messages[0].kwargs.content);
+        } else if ("__interrupt__" in data.data.chunk) {
+          onToken(JSON.stringify(data.data.chunk.__interrupt__[0].value));
+          setIsInterrupt(true);
         } else if (event === "error") {
           throw new Error(data.message || "Backend error");
         }
@@ -66,17 +78,24 @@ async function streamMessage(
 export const EnhancedChatInterface = () => {
   const [currentAssistantMessage, setCurrentAssistantMessage] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
+  const [isInterrupt, setIsInterrupt] = useState(false);
 
   const handleSendMessage = async (message: string): Promise<void> => {
     setIsStreaming(true);
     setCurrentAssistantMessage("");
 
     try {
-      await streamMessage(message, (token: string) => {
-        setCurrentAssistantMessage(prev => prev + token);
-      });
+      await streamMessage(
+        message,
+        (token: string) => {
+          setCurrentAssistantMessage((prev) => prev + token);
+        },
+        { isInterrupt, setIsInterrupt }
+      );
     } catch (error) {
-      setCurrentAssistantMessage("抱歉，發生了錯誤：" + (error as Error).message);
+      setCurrentAssistantMessage(
+        "抱歉，發生了錯誤：" + (error as Error).message
+      );
     } finally {
       setIsStreaming(false);
     }
@@ -84,7 +103,7 @@ export const EnhancedChatInterface = () => {
 
   return (
     <div>
-      <ChatInterface 
+      <ChatInterface
         onSendMessage={handleSendMessage}
         currentAssistantMessage={currentAssistantMessage}
         isStreaming={isStreaming}
