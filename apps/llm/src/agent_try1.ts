@@ -10,7 +10,13 @@ import {
   interrupt,
   Command,
 } from "@langchain/langgraph";
-import { HumanMessage, BaseMessage, AIMessage } from "@langchain/core/messages";
+import {
+  HumanMessage,
+  BaseMessage,
+  AIMessage,
+  AIMessageChunk,
+  ChatMessage,
+} from "@langchain/core/messages";
 import { createReactAgent, ToolNode } from "@langchain/langgraph/prebuilt";
 import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone as PineconeClient } from "@pinecone-database/pinecone";
@@ -22,6 +28,8 @@ import readline from "node:readline";
 import { logger } from "./logger";
 import fs from "node:fs";
 import { InMemoryStore } from "@langchain/langgraph";
+import { MongoClient } from "mongodb";
+import { MongoDBSaver } from "@langchain/langgraph-checkpoint-mongodb";
 
 // 顯示日誌文件路徑
 console.log(`日誌文件位置: ${logger.getLogFilePath()}`);
@@ -56,6 +64,10 @@ const GraphState = Annotation.Root({
     default: () => [],
   }),
   userFeedback: Annotation<string[]>({
+    reducer: (x, y) => x.concat(y),
+    default: () => [],
+  }),
+  chatHistory: Annotation<BaseMessage[]>({
     reducer: (x, y) => x.concat(y),
     default: () => [],
   }),
@@ -356,6 +368,7 @@ async function generateNotRelevantResponse(
 
   return {
     messages: [res],
+    chatHistory: [res],
   };
 }
 
@@ -405,13 +418,37 @@ const humanInterrupt = (state: typeof GraphState.State) => {
     message: "請選擇是否接續執行",
     options: ["yes", "no"],
   });
+
+  const interruptMessage = new AIMessage({
+    content: JSON.stringify({
+      message: "請選擇是否接續執行",
+      options: ["yes", "no"],
+    }),
+  });
+
+  const feedbackMessage = new HumanMessage({
+    content: feedback,
+  });
+
   if (feedback === "yes") {
-    return new Command({ goto: "checkLaborLawRelevance" });
+    return new Command({
+      goto: "checkLaborLawRelevance",
+      update: {
+        userFeedback: [feedback],
+        chatHistory: [interruptMessage, feedbackMessage],
+      },
+    });
   } else {
-    return new Command({ goto: END });
+    return new Command({
+      goto: END,
+      update: {
+        userFeedback: [feedback],
+        chatHistory: [interruptMessage, feedbackMessage],
+      },
+    });
   }
 
-  return { userFeedback: [feedback] };
+  // return { userFeedback: [feedback] };
 };
 
 /**
@@ -488,6 +525,7 @@ async function generate(
 
   return {
     messages: [response],
+    chatHistory: [response],
   };
 }
 
@@ -505,6 +543,7 @@ const workflow = new StateGraph(GraphState)
 
 // 從 START 開始先檢查勞基法相關性
 workflow.addEdge(START, "humanInterrupt");
+// workflow.addEdge(START, "checkLaborLawRelevance");
 
 // 開始先檢查勞基法相關性 有這行上面command 流程會失效以這裡優先跑graph
 // workflow.addEdge("humanInterrupt", "checkLaborLawRelevance");
@@ -570,7 +609,23 @@ workflow.addEdge("rewrite", "agent");
 
 // console.log(JSON.stringify(finalState, null, 2));
 
-const checkpointer = new MemorySaver();
+const writeConfig = {
+  configurable: {
+    thread_id: "1",
+    checkpoint_ns: "",
+  },
+};
+const readConfig = {
+  configurable: {
+    thread_id: "1",
+  },
+};
+
+const client = new MongoClient(process.env.MDB_MCP_CONNECTION_STRING!);
+
+export const checkpointer = new MongoDBSaver({ client });
+// const checkpointer = new MemorySaver();
+
 export const app = workflow.compile({ checkpointer });
 
 /** drawMermaidPng 好像有 bug 輸出的 png 多了很多條不知何存在的虛線 */

@@ -1,8 +1,6 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
-import { ChatInterface, Message } from "./ChatInterface";
+import { ChatInterface, thread_id } from "./ChatInterface";
 
-const thread_id = new Date().getTime().toString();
-console.log("thread_id: ", thread_id);
 async function streamMessage(
   input: string,
   onToken: (token: string) => void,

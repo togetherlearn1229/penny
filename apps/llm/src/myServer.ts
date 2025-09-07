@@ -1,9 +1,8 @@
 // server.ts
 import express from "express";
 import cors from "cors";
-import { app as graphApp } from "./agent_try1";
-import { HumanMessage, BaseMessage } from "@langchain/core/messages";
-import { threadId } from "node:worker_threads";
+import { app as graphApp, checkpointer } from "./agent_try1";
+import { HumanMessage } from "@langchain/core/messages";
 import { logger } from "./logger";
 import { Command } from "@langchain/langgraph";
 
@@ -46,18 +45,24 @@ server.post("/api/agent/stream", async (req, res) => {
 
     // console.log("output", output);
 
-    const inputs = [new HumanMessage({ content: userText })];
+    const inputs = [
+      new HumanMessage({
+        content: userText,
+        // additional_kwargs: { test: 1111 },
+      }),
+    ];
 
     for await (const event of graphApp.streamEvents(
-      isInterrupt ? new Command({ resume: userText }) : { messages: inputs },
+      isInterrupt
+        ? new Command({ resume: userText })
+        : { messages: inputs, chatHistory: inputs },
       {
         version: "v2",
         configurable: { thread_id: thread_id },
-        recursionLimit: 2,
       }
     )) {
       const kind = event.event;
-      // logger.log(`kind:${event}`, event);
+      logger.log(`****========== kind:${event}`, event);
 
       const isOnChainStream =
         kind === "on_chain_stream" && "__interrupt__" in event.data.chunk;
@@ -82,6 +87,30 @@ server.post("/api/agent/stream", async (req, res) => {
   } catch (err: any) {
     console.log("err", err);
     sse(res, "error", { message: err?.message ?? String(err) });
+  } finally {
+    res.end();
+  }
+});
+
+server.post("/connect", async (req, res) => {
+  try {
+    const thread_id = String(req.body?.thread_id ?? "");
+
+    const readConfig = {
+      version: "v2",
+      configurable: { thread_id: thread_id },
+    };
+
+    const allCheckpoints = [];
+    for await (const state of graphApp.getStateHistory(readConfig)) {
+      allCheckpoints.push(state);
+    }
+
+    logger.log("allCheckpoints", allCheckpoints);
+
+    return res.json(allCheckpoints);
+  } catch (err: any) {
+    console.log("err", err);
   } finally {
     res.end();
   }
