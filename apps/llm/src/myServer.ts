@@ -1,7 +1,7 @@
 // server.ts
 import express from "express";
 import cors from "cors";
-import { app as graphApp, checkpointer } from "./agent_try1";
+import { app as graphApp, checkpointer, store } from "./agent_try1";
 import { HumanMessage } from "@langchain/core/messages";
 import { logger } from "./logger";
 import { Command } from "@langchain/langgraph";
@@ -96,10 +96,18 @@ server.post("/connect", async (req, res) => {
   try {
     const thread_id = String(req.body?.thread_id ?? "");
 
+    const org_id = String(req.body?.org_id ?? "org1");
+    const user_id = String(req.body?.user_id ?? "user1");
+
     const readConfig = {
       version: "v2",
       configurable: { thread_id: thread_id },
     };
+
+    store.put([org_id, user_id], [org_id, user_id].join("/"), {
+      test: "調教penny",
+      yes: "123",
+    });
 
     const allCheckpoints = [];
     for await (const state of graphApp.getStateHistory(readConfig)) {

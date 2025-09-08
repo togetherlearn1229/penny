@@ -27,9 +27,10 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import readline from "node:readline";
 import { logger } from "./logger";
 import fs from "node:fs";
-import { InMemoryStore } from "@langchain/langgraph";
+// import { InMemoryStore } from "@langchain/langgraph";
 import { MongoClient } from "mongodb";
 import { MongoDBSaver } from "@langchain/langgraph-checkpoint-mongodb";
+import { InMemoryStore } from "./store/memory";
 
 // 顯示日誌文件路徑
 console.log(`日誌文件位置: ${logger.getLogFilePath()}`);
@@ -626,7 +627,9 @@ const client = new MongoClient(process.env.MDB_MCP_CONNECTION_STRING!);
 export const checkpointer = new MongoDBSaver({ client });
 // const checkpointer = new MemorySaver();
 
-export const app = workflow.compile({ checkpointer });
+export const store = new InMemoryStore({ client });
+
+export const app = workflow.compile({ checkpointer, store });
 
 /** drawMermaidPng 好像有 bug 輸出的 png 多了很多條不知何存在的虛線 */
 const getGraphPng = async () => {
