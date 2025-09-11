@@ -4,7 +4,13 @@ import cors from "cors";
 import { app as graphApp, checkpointer, store } from "./agent_try1";
 import { HumanMessage } from "@langchain/core/messages";
 import { logger } from "./logger";
-import { Command } from "@langchain/langgraph";
+import {
+  Command,
+  type ListNamespacesOperation,
+  type PutOperation,
+  type SearchOperation,
+  type GetOperation,
+} from "@langchain/langgraph";
 
 const server = express();
 server.use(cors());
@@ -104,20 +110,53 @@ server.post("/connect", async (req, res) => {
       configurable: { thread_id: thread_id },
     };
 
-    // store.put([org_id, user_id], [org_id, user_id].join("/"), {
-    //   test: "調教penny",
-    //   yes: "123",
-    // });
-    store.batch([
-      {
-        namespace: [org_id, user_id],
-        key: [org_id, user_id].join("/"),
-        value: {
-          test: "調教penny",
-          yes: "123",
-        },
+    // ListNamespacesOperation
+    // PutOperation
+    // SearchOperation
+    // GetOperation
+
+    const putOperation: PutOperation = {
+      namespace: ["機構A", "王曉明"],
+      key: "喜歡的東西",
+      value: {
+        pet: ["小貓", "小狗"],
+        fruit: ["鳳梨"],
       },
-    ]);
+    };
+
+    // await store.batch([putOperation]);
+    await store.put(["機構A", "王曉明"], "討厭的人", {
+      name: ["lulu"],
+    });
+
+    const getOperation: GetOperation = {
+      namespace: ["機構A", "王曉明"],
+      key: "喜歡的東西",
+    };
+
+    // const getOperationRes = await store.batch([getOperation]);
+    const getOperationRes = await store.get(["機構A", "王曉明"], "喜歡的東西");
+
+    // console.log("喜歡的東西", getOperationRes[0]);
+    console.log("喜歡的東西", getOperationRes);
+
+    const searchOperation: SearchOperation = {
+      namespacePrefix: [""],
+      filter: {
+        namespace: ["機構A", "王曉明"],
+        key: "喜歡的東西",
+      },
+    };
+    // const searchOperationRes = await store.batch([searchOperation]);
+    const searchOperationRes = await store.search([""], {
+      filter: {
+        namespace: ["機構A", "王曉明"],
+        key: "喜歡的東西",
+      },
+    });
+
+    // console.log("喜歡的東西AAA", searchOperationRes[0]);
+    console.log("喜歡的東西AAA", searchOperationRes);
 
     const allCheckpoints = [];
     for await (const state of graphApp.getStateHistory(readConfig)) {

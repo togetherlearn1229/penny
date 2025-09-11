@@ -123,6 +123,7 @@ export class InMemoryStore extends BaseStore {
     return "limit" in op && "offset" in op && !("namespace" in op);
   }
 
+  /** SearchOperation 的 filter 要是 mongoDB Filter<Item> 的型別 ， namespacePrefix、query 沒用到 */
   async batch<Op extends readonly Operation[]>(
     operations: Op
   ): Promise<OperationResults<Op>> {
@@ -148,6 +149,7 @@ export class InMemoryStore extends BaseStore {
           .collection(this.storeCollectionName)
           .updateOne(upsertQuery, { $set: doc }, { upsert: true });
       }
+
       if (this.isGetOperation(operation)) {
         // 類型現在是 GetOperation
         const { namespace, key } = operation;
@@ -159,14 +161,23 @@ export class InMemoryStore extends BaseStore {
           key,
         };
 
-        return this.db0.collection<Item>(this.storeCollectionName);
-
-        (1).findOne(filterQuery);
+        return this.db
+          .collection<Item>(this.storeCollectionName)
+          .findOne(filterQuery);
       }
       if (this.isSearchOperation(operation)) {
-        // 類型現在是 PutOperation
-        return this.db.collection<Item>(this.storeCollectionName).findOne({});
+        // 類型現在是 SearchOperation
+        const { namespacePrefix, filter, limit, offset, query } = operation;
+        console.log("operation namespacePrefix", operation);
+        return this.db
+          .collection<Item>(this.storeCollectionName)
+          .find({ ...filter })
+          .limit(limit ?? 0)
+          .skip(offset ?? 0)
+          .toArray();
       }
+
+      // 先不實現
       // if (this.isListNamespacesOperation(operation)) {
       // 類型現在是 PutOperation
       return this.db.collection<Item>(this.storeCollectionName).findOne({});
@@ -177,91 +188,5 @@ export class InMemoryStore extends BaseStore {
 
     return res as OperationResults<Op>;
     // return [] as OperationResults<Op>;
-  }
-
-  /**
-   * Retrieve a single item by its namespace and key.
-   *
-   * @param namespace Hierarchical path for the item
-   * @param key Unique identifier within the namespace
-   * @returns Promise resolving to the item or null if not found
-   */
-  async get(namespace: string[], key: string): Promise<Item | null> {
-    const filterQuery = {
-      namespace,
-      key,
-    };
-
-    const doc = await this.db
-      .collection<Item>(this.storeCollectionName)
-      .findOne(filterQuery);
-
-    return doc;
-  }
-
-  async find(
-    namespace: string[],
-    key: string,
-    query: Filter<Item>,
-    option: Omit<FindOneOptions, "timeoutMode"> & Abortable
-  ): Promise<Item | null> {
-    const filterQuery = {
-      namespace,
-      key,
-      ...query,
-    };
-
-    const doc = await this.db
-      .collection<Item>(this.storeCollectionName)
-      .findOne(filterQuery, option);
-
-    return doc;
-  }
-
-  /**
-   * Store or update an item.
-   *
-   * @param namespace Hierarchical path for the item
-   * @param key Unique identifier within the namespace
-   * @param value Object containing the item's data
-   * @param index Optional indexing configuration
-   *
-   * @example
-   * // Simple storage
-   * await store.put(["docs"], "report", { title: "Annual Report" });
-   *
-   * // With specific field indexing
-   * await store.put(
-   *   ["docs"],
-   *   "report",
-   *   {
-   *     title: "Q4 Report",
-   *     chapters: [{ content: "..." }, { content: "..." }]
-   *   },
-   *   ["title", "chapters[*].content"]
-   * );
-   */
-  async put(
-    namespace: string[],
-    key: string,
-    value: Record<string, any>,
-    index?: false | string[]
-  ): Promise<void> {
-    validateNamespace(namespace);
-
-    const doc: StoreItem = {
-      namespace,
-      key,
-      value,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    const upsertQuery = {
-      namespace,
-      key,
-    };
-    await this.db
-      .collection(this.storeCollectionName)
-      .updateOne(upsertQuery, { $set: doc }, { upsert: true });
   }
 }
