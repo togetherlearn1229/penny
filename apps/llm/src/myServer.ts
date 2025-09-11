@@ -104,10 +104,20 @@ server.post("/connect", async (req, res) => {
       configurable: { thread_id: thread_id },
     };
 
-    store.put([org_id, user_id], [org_id, user_id].join("/"), {
-      test: "調教penny",
-      yes: "123",
-    });
+    // store.put([org_id, user_id], [org_id, user_id].join("/"), {
+    //   test: "調教penny",
+    //   yes: "123",
+    // });
+    store.batch([
+      {
+        namespace: [org_id, user_id],
+        key: [org_id, user_id].join("/"),
+        value: {
+          test: "調教penny",
+          yes: "123",
+        },
+      },
+    ]);
 
     const allCheckpoints = [];
     for await (const state of graphApp.getStateHistory(readConfig)) {

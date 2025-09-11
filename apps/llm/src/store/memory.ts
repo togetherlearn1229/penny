@@ -1,22 +1,24 @@
-import { BaseStore, type Item } from "@langchain/langgraph";
 import {
-  // BaseStore,
+  BaseStore,
+  type Item,
   type OperationResults,
-  // type Item,
   type Operation,
-  MatchCondition,
-  ListNamespacesOperation,
-  PutOperation,
-  SearchOperation,
-  GetOperation,
-  type IndexConfig,
-  type SearchItem,
-} from "./base.js";
+  type MatchCondition,
+  type ListNamespacesOperation,
+  type PutOperation,
+  type SearchOperation,
+  type GetOperation,
+  // type IndexConfig,
+  // type SearchItem
+} from "@langchain/langgraph";
 import { tokenizePath, compareValues, getTextAtPath } from "./utils.js";
 import {
   type ObjectId,
   type MongoClient,
   type Db as MongoDatabase,
+  type FindOneOptions,
+  type Abortable,
+  type Filter,
 } from "mongodb";
 import { validateNamespace } from "./base.js";
 
@@ -96,10 +98,124 @@ export class InMemoryStore extends BaseStore {
     this.storeCollectionName = storeCollectionName ?? this.storeCollectionName;
   }
 
+  /** type guard is PutOperation */
+  private isPutOperation(op: Operation): op is PutOperation {
+    return "value" in op && "namespace" in op && "key" in op;
+  }
+
+  /** type guard is GetOperation  */
+  private isGetOperation(op: Operation): op is GetOperation {
+    return (
+      "namespace" in op &&
+      "key" in op &&
+      !("value" in op) &&
+      !("namespacePrefix" in op)
+    );
+  }
+  /** type guard is SearchOperation  */
+  private isSearchOperation(op: Operation): op is SearchOperation {
+    return "namespacePrefix" in op;
+  }
+  /** type guard is ListNamespacesOperation  */
+  private isListNamespacesOperation(
+    op: Operation
+  ): op is ListNamespacesOperation {
+    return "limit" in op && "offset" in op && !("namespace" in op);
+  }
+
   async batch<Op extends readonly Operation[]>(
     operations: Op
   ): Promise<OperationResults<Op>> {
-    return [] as OperationResults<Op>;
+    const promises = operations.map((operation) => {
+      if (this.isPutOperation(operation)) {
+        // 類型現在是 PutOperation
+        const { namespace, key, value } = operation;
+
+        validateNamespace(namespace);
+
+        const doc: StoreItem = {
+          namespace,
+          key,
+          value: value ?? {},
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        const upsertQuery = {
+          namespace,
+          key,
+        };
+        return this.db
+          .collection(this.storeCollectionName)
+          .updateOne(upsertQuery, { $set: doc }, { upsert: true });
+      }
+      if (this.isGetOperation(operation)) {
+        // 類型現在是 GetOperation
+        const { namespace, key } = operation;
+
+        validateNamespace(namespace);
+
+        const filterQuery = {
+          namespace,
+          key,
+        };
+
+        return this.db0.collection<Item>(this.storeCollectionName);
+
+        (1).findOne(filterQuery);
+      }
+      if (this.isSearchOperation(operation)) {
+        // 類型現在是 PutOperation
+        return this.db.collection<Item>(this.storeCollectionName).findOne({});
+      }
+      // if (this.isListNamespacesOperation(operation)) {
+      // 類型現在是 PutOperation
+      return this.db.collection<Item>(this.storeCollectionName).findOne({});
+      // }
+    });
+
+    const res = await Promise.all(promises);
+
+    return res as OperationResults<Op>;
+    // return [] as OperationResults<Op>;
+  }
+
+  /**
+   * Retrieve a single item by its namespace and key.
+   *
+   * @param namespace Hierarchical path for the item
+   * @param key Unique identifier within the namespace
+   * @returns Promise resolving to the item or null if not found
+   */
+  async get(namespace: string[], key: string): Promise<Item | null> {
+    const filterQuery = {
+      namespace,
+      key,
+    };
+
+    const doc = await this.db
+      .collection<Item>(this.storeCollectionName)
+      .findOne(filterQuery);
+
+    return doc;
+  }
+
+  async find(
+    namespace: string[],
+    key: string,
+    query: Filter<Item>,
+    option: Omit<FindOneOptions, "timeoutMode"> & Abortable
+  ): Promise<Item | null> {
+    const filterQuery = {
+      namespace,
+      key,
+      ...query,
+    };
+
+    const doc = await this.db
+      .collection<Item>(this.storeCollectionName)
+      .findOne(filterQuery, option);
+
+    return doc;
   }
 
   /**
@@ -135,16 +251,13 @@ export class InMemoryStore extends BaseStore {
 
     const doc: StoreItem = {
       namespace,
-      key: namespace.join("/"),
-      // /** prefixes: ["a","a/b","a/b/c"] */
-      // prefixes: string[];
-      // /** depth: ns.length */
-      // depth: number;
+      key,
       value,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
     const upsertQuery = {
+      namespace,
       key,
     };
     await this.db
